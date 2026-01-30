@@ -1,8 +1,8 @@
+import MainLayout from "@/layouts/MainLayout";
+import DetailPage from "@/pages/detail/DetailPage";
+import HomePage from "@/pages/home/HomePage";
+import LoginPage from "@/pages/login/LoginPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout";
-import HomePage from "../pages/home/HomePage";
-import LoginPage from "../pages/login/LoginPage";
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -14,6 +14,10 @@ export const router = createBrowserRouter([
       {
         path: "/home",
         element: <HomePage />,
+      },
+      {
+        path: "/detail/:id",
+        element: <DetailPage />,
       },
       {
         path: "/login",

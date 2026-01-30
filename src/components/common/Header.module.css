@@ -1,5 +1,5 @@
 .header {
-    height: 80px;
+    height: 60px;
     padding: 0 24px;
 
     display: flex;
@@ -9,7 +9,12 @@
     background: #fff;
     color: #25316D;
 
-    border-bottom: 1px solid #eaeaea
+    border-bottom: 1px solid #eaeaea;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .logo {

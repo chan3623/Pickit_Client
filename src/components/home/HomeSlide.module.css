@@ -3,7 +3,7 @@
     height: 850px;
     overflow: hidden;
     position: relative;
-    background-color: #1a1a1a;
+    background-color: #121212;
     display: flex;
     align-items: center;
 }
@@ -11,7 +11,7 @@
 .slideInnerBox {
     display: flex;
     align-items: center;
-    height: 650px;
+    height: 610px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -22,7 +22,7 @@
 
 .slideListBox {
     width: 460px;
-    height: 650px;
+    height: 610px;
     flex: 0 0 460px;
     margin: 0;
     padding: 0;

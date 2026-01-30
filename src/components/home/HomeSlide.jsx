@@ -1,10 +1,10 @@
+import img1 from "@/assets/images/디지몬.webp";
+import img6 from "@/assets/images/모프센드.webp";
+import img2 from "@/assets/images/빵빵이.webp";
+import img3 from "@/assets/images/안전가옥.webp";
+import img4 from "@/assets/images/원피스.webp";
+import img5 from "@/assets/images/코난.webp";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import img1 from "../../assets/images/디지몬.webp";
-import img6 from "../../assets/images/모프센드.webp";
-import img2 from "../../assets/images/빵빵이.webp";
-import img3 from "../../assets/images/안전가옥.webp";
-import img4 from "../../assets/images/원피스.webp";
-import img5 from "../../assets/images/코난.webp";
 import style from "./HomeSlide.module.css";
 
 export default function HomeSlide() {
