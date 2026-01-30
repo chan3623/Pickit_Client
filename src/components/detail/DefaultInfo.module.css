@@ -1,35 +1,53 @@
 .defaultInfoBox {
-    width: 100%;
-    margin-top: 60px;
+    width: 960px;
 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
+
+    margin-top: 150px;
     margin-bottom: 30px;
 }
 
-.imageBox {
+.imageInfoInnerBox {
     width: 100%;
     height: 600px;
 
-    background-color: #121212;
-
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.imageBox {
+    width: 390px;
+    height: 520px;
+
+    /* background-color: #fff; */
+
+    /* display: flex;
     justify-content: center;
     align-items: center;
 
-    margin-bottom: 30px;
+    margin-bottom: 30px; */
 }
 
 .image {
-    width: 480px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
 }
 
 .textInnerBox {
-    width: 960px;
-    margin-top: 30px;
+    width: calc(100% - 390px);
+
+    padding: 0 50px;
+    /* margin-top: 30px; */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 
 }
 
