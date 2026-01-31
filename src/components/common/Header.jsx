@@ -1,9 +1,16 @@
 import styles from "./Header.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const handleClickLogo = () => {
+    navigate('/home')
+  }
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>Pickit</div>
+      
+      <div className={styles.logo} onClick={() => handleClickLogo()}>Pickit</div>
 
       <nav className={styles.menu}>
         <button>

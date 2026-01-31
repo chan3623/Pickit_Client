@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <div className={styles.page}>
       <DefaultInfo />
-      {/* <DetailInfo /> */}
+      <DetailInfo />
     </div>
   );
 }
