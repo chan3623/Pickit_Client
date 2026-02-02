@@ -1,5 +1,6 @@
 import DefaultInfo from "@/components/detail/DefaultInfo";
 import DetailInfo from "@/components/detail/DetailInfo";
+import Reservation from "@/components/detail/Reservation";
 import styles from "./DetailPage.module.css";
 
 export default function HomePage() {
@@ -7,6 +8,7 @@ export default function HomePage() {
     <div className={styles.page}>
       <DefaultInfo />
       <DetailInfo />
+      <Reservation/>
     </div>
   );
 }

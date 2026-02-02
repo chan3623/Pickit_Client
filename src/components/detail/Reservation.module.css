@@ -1,0 +1,125 @@
+.wrapper {
+  width: 1115px;
+  margin-bottom: 100px;
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.monthHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.monthHeader button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.day {
+  height: 44px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+}
+
+.available {
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.available:hover {
+  background: #000;
+  color: #fff;
+}
+
+.unavailable {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* 일요일 */
+.sunday {
+  color: #e53935; /* 빨간색 */
+}
+
+/* 토요일 */
+.saturday {
+  color: #1e88e5; /* 파란색 */
+}
+
+
+.selected {
+  background: #000;
+  color: #fff;
+}
+
+.selected.sunday,
+.selected.saturday {
+  color: #fff;
+}
+
+.subTitle {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.timeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.time {
+  padding: 12px 0;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.timeSelected {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.reserveBtn {
+  width: 100%;
+  height: 48px;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+}
+
+.reserveBtn:disabled {
+  background: #ccc;
+}

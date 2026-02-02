@@ -3,7 +3,7 @@ import style from "./DefaultInfo.module.css";
 export default function DefaultInfo() {
 
   const infoData = [
-    { id: "주차", text: "주차가능" },
+    { id: "park", text: "주차가능" },
     { id: "free", text: "입장료 무료" },
   ];
 
