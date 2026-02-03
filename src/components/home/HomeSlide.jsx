@@ -1,25 +1,55 @@
-import img1 from "@/assets/images/디지몬.webp";
-import img6 from "@/assets/images/모프센드.webp";
-import img2 from "@/assets/images/빵빵이.webp";
-import img3 from "@/assets/images/안전가옥.webp";
-import img4 from "@/assets/images/원피스.webp";
-import img5 from "@/assets/images/코난.webp";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { getRandomPopups } from "@/services/home.api";
+import { useNavigate } from "react-router-dom";
 import style from "./HomeSlide.module.css";
 
+const BASE_URL = "http://localhost:3000";
+
 export default function HomeSlide() {
-  const images = useMemo(() => [img1, img2, img3, img4, img5, img6], []);
+  const [popups, setPopups] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [isTransition, setIsTransition] = useState(false);
+
+  const navigate = useNavigate();
+
   const ITEM_WIDTH = 460;
   const AUTO_PLAY_TIME = 2000;
 
-  const extendedImages = useMemo(
-    () => [...images, ...images, ...images],
-    [images],
-  );
+  /* ------------------------------
+   * 데이터 조회
+   * ------------------------------ */
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getRandomPopups();
+      if (response.status === 200) {
+        const data = response.data;
 
-  const [index, setIndex] = useState(images.length);
-  const [isTransition, setIsTransition] = useState(false);
+        setPopups(data);
+        setIndex(data.length); // 무한 슬라이드 기준점
+      }
+    };
 
+    fetchData();
+  }, []);
+
+  /* ------------------------------
+   * 슬라이드용 확장 데이터
+   * ------------------------------ */
+  const extendedPopups = useMemo(() => {
+    if (popups.length === 0) return [];
+    return [...popups, ...popups, ...popups];
+  }, [popups]);
+
+  /* ------------------------------
+   * 네비게이션
+   * ------------------------------ */
+  const handleCardClick = (popupId) => {
+    navigate(`/detail/${popupId}`);
+  };
+
+  /* ------------------------------
+   * 슬라이드 이동
+   * ------------------------------ */
   const nextSlide = useCallback(() => {
     if (isTransition) return;
     setIsTransition(true);
@@ -32,35 +62,36 @@ export default function HomeSlide() {
     setIndex((prev) => prev - 1);
   }, [isTransition]);
 
+  /* ------------------------------
+   * 무한 슬라이드 보정
+   * ------------------------------ */
   useEffect(() => {
-    const transitionSpeed = 500;
+    if (!isTransition) return;
 
-    if (isTransition) {
-      const timer = setTimeout(() => {
-        setIsTransition(false);
+    const timer = setTimeout(() => {
+      setIsTransition(false);
 
-        // 경계선 도달 시 중앙 세트로 점프 (순간이동)
-        if (index >= images.length * 2) {
-          setIndex(index - images.length);
-        } else if (index < images.length) {
-          setIndex(index + images.length);
-        }
-      }, transitionSpeed);
+      if (index >= popups.length * 2) {
+        setIndex(index - popups.length);
+      } else if (index < popups.length) {
+        setIndex(index + popups.length);
+      }
+    }, 500);
 
-      return () => clearTimeout(timer);
-    }
-  }, [index, isTransition, images.length]);
+    return () => clearTimeout(timer);
+  }, [index, isTransition, popups.length]);
 
+  /* ------------------------------
+   * 자동 재생
+   * ------------------------------ */
   useEffect(() => {
-    // 사용자가 조작 중(isTransition === true)일 때는 타이머를 돌리지 않음
-    if (isTransition) return;
+    if (isTransition || popups.length === 0) return;
 
-    const interval = setInterval(() => {
-      nextSlide();
-    }, AUTO_PLAY_TIME);
-
+    const interval = setInterval(nextSlide, AUTO_PLAY_TIME);
     return () => clearInterval(interval);
-  }, [isTransition, nextSlide]);
+  }, [isTransition, nextSlide, popups.length]);
+
+  if (popups.length === 0) return null;
 
   return (
     <div className={style.slideBox}>
@@ -71,22 +102,31 @@ export default function HomeSlide() {
           transition: isTransition ? "transform 0.5s ease-in-out" : "none",
         }}
       >
-        {extendedImages.map((src, i) => {
+        {extendedPopups.map((popup, i) => {
           const isCenter = i === index;
 
           return (
             <li
-              key={i}
-              className={`${style.slideListBox} ${isCenter ? style.center : ""}`}
+              key={`${popup.id}-${i}`}
+              className={`${style.slideListBox} ${
+                isCenter ? style.center : ""
+              }`}
               style={{
                 transition: isTransition
                   ? "transform 0.5s ease-in-out"
                   : "none",
               }}
             >
-              <div className={style.card}>
+              <div
+                className={style.card}
+                onClick={() => handleCardClick(popup.id)}
+              >
                 {!isCenter && <div className={style.overlay} />}
-                <img src={src} alt={`slide-${i}`} className={style.slideImg} />
+                <img
+                  src={`${BASE_URL}${popup.imagePath}`}
+                  alt={`popup-${popup.id}`}
+                  className={style.slideImg}
+                />
               </div>
             </li>
           );

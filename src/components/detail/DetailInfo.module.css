@@ -42,4 +42,5 @@
     font-size : 14px;
     padding : 30px 20px;
     margin-bottom : 30px;
+    white-space: pre-line;
 }

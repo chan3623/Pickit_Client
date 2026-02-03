@@ -19,27 +19,53 @@ const isWithinPopupPeriod = (dateStr, popup) => {
   return date >= start && date <= end;
 };
 
+// 날짜 → 요일 (1~7, 월~일)
+const getDayOfWeek = (dateStr) => {
+  const jsDay = new Date(dateStr).getDay(); // 0~6
+  return jsDay === 0 ? 7 : jsDay;
+};
+
 // 운영 요일 체크
 const isOperatingDay = (dateStr, policyDay) => {
-  const jsDay = new Date(dateStr).getDay(); // 0~6
-  const dayOfWeek = jsDay === 0 ? 7 : jsDay; // 1~7 (월~일)
-
+  const dayOfWeek = getDayOfWeek(dateStr);
   return policyDay.some(d => d.dayOfWeek === dayOfWeek);
 };
 
-// 시간 슬롯 생성 (안 맞으면 버림)
+// 날짜에 해당하는 policy 찾기
+const getPolicyByDate = (dateStr, policyList, policyDay) => {
+  const dayOfWeek = getDayOfWeek(dateStr);
+
+  const matchDay = policyDay.find(d => d.dayOfWeek === dayOfWeek);
+  if (!matchDay) return null;
+
+  return policyList.find(p => p.id === matchDay.policyId) ?? null;
+};
+
+// 시간 슬롯 생성
 const generateTimeSlots = (policy) => {
   if (!policy) return [];
 
-  const [openH] = policy.openTime.split(":").map(Number);
-  const [closeH] = policy.closeTime.split(":").map(Number);
+  const [openH, openM] = policy.openTime.split(":").map(Number);
+  const [closeH, closeM] = policy.closeTime.split(":").map(Number);
+
+  const open = openH * 60 + openM;
+  const close = closeH * 60 + closeM;
+
+  const slotMinutes = policy.slotHours;
+  const lastStartTime = close - slotMinutes;
 
   const slots = [];
-  let current = openH;
+  let current = open;
 
-  while (current + policy.slotHours <= closeH) {
-    slots.push(`${String(current).padStart(2, "0")}:00`);
-    current += policy.slotHours;
+  while (current <= lastStartTime) {
+    const h = Math.floor(current / 60);
+    const m = current % 60;
+
+    slots.push(
+      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+    );
+
+    current += slotMinutes;
   }
 
   return slots;
@@ -49,7 +75,7 @@ export default function Reservation() {
   const { id } = useParams();
 
   const [popup, setPopup] = useState(null);
-  const [policy, setPolicy] = useState(null);
+  const [policy, setPolicy] = useState([]);
   const [policyDay, setPolicyDay] = useState([]);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -73,7 +99,7 @@ export default function Reservation() {
     fetchData();
   }, [id]);
 
-  if (!popup || !policy) return null;
+  if (!popup || policy.length === 0) return null;
 
   /* =====================
      달력 계산
@@ -102,9 +128,14 @@ export default function Reservation() {
     );
   };
 
-  const timeSlots =
+  const activePolicy =
     selectedDate && isDateAvailable(selectedDate)
-      ? generateTimeSlots(policy)
+      ? getPolicyByDate(selectedDate, policy, policyDay)
+      : null;
+
+  const timeSlots =
+    selectedDate && activePolicy
+      ? generateTimeSlots(activePolicy)
       : [];
 
   /* =====================
@@ -129,21 +160,18 @@ export default function Reservation() {
     <section className={styles.wrapper}>
       <h2 className={styles.title}>예약하기</h2>
 
-      {/* 월 이동 */}
       <div className={styles.monthHeader}>
         <button onClick={goPrevMonth}>‹</button>
         <span>{year}년 {month + 1}월</span>
         <button onClick={goNextMonth}>›</button>
       </div>
 
-      {/* 요일 */}
       <div className={styles.weekdays}>
         {["일", "월", "화", "수", "목", "금", "토"].map(day => (
           <div key={day}>{day}</div>
         ))}
       </div>
 
-      {/* 달력 */}
       <div className={styles.calendar}>
         {days.map((date, idx) => {
           if (!date) return <div key={idx} />;
@@ -152,8 +180,6 @@ export default function Reservation() {
           const isSelected = selectedDate === date;
 
           const jsDay = new Date(date).getDay();
-          const isSunday = jsDay === 0;
-          const isSaturday = jsDay === 6;
 
           return (
             <button
@@ -163,8 +189,8 @@ export default function Reservation() {
                 ${styles.day}
                 ${isAvailable ? styles.available : styles.unavailable}
                 ${isSelected ? styles.selected : ""}
-                ${isSunday ? styles.sunday : ""}
-                ${isSaturday ? styles.saturday : ""}
+                ${jsDay === 0 ? styles.sunday : ""}
+                ${jsDay === 6 ? styles.saturday : ""}
               `}
               onClick={() => {
                 setSelectedDate(date);
@@ -177,8 +203,7 @@ export default function Reservation() {
         })}
       </div>
 
-      {/* 시간 선택 */}
-      {selectedDate && (
+      {selectedDate && activePolicy && (
         <>
           <h3 className={styles.subTitle}>시간 선택</h3>
           <div className={styles.timeGrid}>

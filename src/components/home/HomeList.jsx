@@ -1,34 +1,8 @@
 import { getPopups } from "@/services/home.api";
 import style from "./HomeList.module.css";
 
-import img11 from "@/assets/images/PUBG.webp";
-import img7 from "@/assets/images/가정교사히트맨.webp";
-import img8 from "@/assets/images/나만의금쪽이.webp";
-import img1 from "@/assets/images/디지몬.webp";
-import img6 from "@/assets/images/모프센드.webp";
-import img2 from "@/assets/images/빵빵이.webp";
-import img9 from "@/assets/images/아트북페어.webp";
-import img3 from "@/assets/images/안전가옥.webp";
-import img4 from "@/assets/images/원피스.webp";
-import img10 from "@/assets/images/전지적독자시점.webp";
-import img5 from "@/assets/images/코난.webp";
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const images = [
-  img1,
-  img2,
-  img3,
-  img4,
-  img5,
-  img6,
-  img7,
-  img8,
-  img9,
-  img10,
-  img11,
-];
 
 export default function HomeList() {
   const [popupList, setPopupList] = useState([]);
@@ -45,7 +19,7 @@ export default function HomeList() {
       if (response.status === 200 && response.statusText === "OK") {
         const { data } = response;
 
-        const selectPopupList = data.map((item, index) => {
+        const selectPopupList = data.map((item) => {
           const startDate = new Date(item.startDate);
           const endDate = new Date(item.endDate);
 
@@ -57,7 +31,7 @@ export default function HomeList() {
             ...item,
             startDate: kstStartDate.toISOString().split("T")[0],
             endDate: kstEndDate.toISOString().split("T")[0],
-            src: images[index],
+            src: `http://localhost:3000${item.imagePath}`,
           };
         });
 
