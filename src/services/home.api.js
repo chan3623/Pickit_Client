@@ -1,11 +1,11 @@
 import api from "../utils/axios";
 
 export async function getPopups() {
-  const res = await api.get("http://localhost:3000/popup");
+  const res = await api.get("/popup");
   return res;
 }
 
 export async function getRandomPopups() {
-  const res = await api.get("http://localhost:3000/popup/random");
+  const res = await api.get("/popup/random");
   return res;
 }
