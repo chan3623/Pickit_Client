@@ -1,37 +1,52 @@
 import { useEffect, useState } from "react";
 import style from "./DetailInfo.module.css";
-import { getPopup } from "@/services/detail.api";
+import { getPopupDescription } from "@/services/detail.api";
 import { useParams } from "react-router-dom";
+
+const formatPhoneNumber = (tel) => {
+  if (!tel) return '';
+
+  const onlyNumber = tel.replace(/\D/g, '');
+
+  if (onlyNumber.length === 11) {
+    return onlyNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+  }
+
+  if (onlyNumber.length === 10) {
+    return onlyNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+  }
+
+  return tel;
+};
 
 export default function DetailInfo() {
   const { id } = useParams();
-  const [popup, setPopup] = useState(null);
+  const [detail, setDetail] = useState({ description: '', tel: '' });
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getPopup(id);
+      const response = await getPopupDescription(id);
       if (response.status === 200) {
-        const popup = response.data;
-        setPopup(popup)
+        setDetail(response.data);
       }
     };
 
     fetchData();
   }, [id]);
-  
+
   return (
     <div className={style.detailBox}>
       <div className={style.titleInnerBox}>
         <h2>팝업스토어 소개</h2>
 
-         <div className={style.telInnerBox}>
-          <p>* 문의사항 </p>
-          <p>010-1111-2222</p>
-         </div>
+        <div className={style.telInnerBox}>
+          <p>* 문의사항</p>
+          <p>{formatPhoneNumber(detail.tel)}</p>
+        </div>
       </div>
 
       <div className={style.textBox}>
-        {popup?.description ? popup?.description : ''}
+        {detail.description}
       </div>
     </div>
   );

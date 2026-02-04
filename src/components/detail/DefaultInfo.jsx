@@ -25,7 +25,6 @@ export default function DefaultInfo() {
       const response = await getPopupOperation(id);
       if (response.status === 200) {
         const { popup, policy, policyDay } = response.data;
-        console.log('popup : ', popup)
         setPopup(popup);
         setPolicy(policy);
         setPolicyDay(policyDay);

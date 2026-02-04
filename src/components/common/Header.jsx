@@ -1,7 +1,7 @@
 import styles from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 
-export default function Header() {
+export default function Header({ onLoginClick }) {
   const navigate = useNavigate();
 
   const handleClickLogo = () => {
@@ -13,7 +13,7 @@ export default function Header() {
       <div className={styles.logo} onClick={() => handleClickLogo()}>Pickit</div>
 
       <nav className={styles.menu}>
-        <button>
+        <button onClick={onLoginClick}>
           <li>
             <svg
               xmlns="http://www.w3.org/2000/svg"

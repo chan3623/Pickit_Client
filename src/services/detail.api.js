@@ -9,3 +9,8 @@ export async function getPopup(popupId) {
   const res = await api.get(`http://localhost:3000/popup/${popupId}`);
   return res;
 }
+
+export async function getPopupDescription(popupId) {
+  const res = await api.get(`http://localhost:3000/popup/detail/${popupId}`);
+  return res;
+}
