@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getPopupOperation } from "@/services/detail.api";
 import styles from "./Reservation.module.css";
 
@@ -21,7 +21,7 @@ const isWithinPopupPeriod = (dateStr, popup) => {
 
 // 날짜 → 요일 (1~7, 월~일)
 const getDayOfWeek = (dateStr) => {
-  const jsDay = new Date(dateStr).getDay(); // 0~6
+  const jsDay = new Date(dateStr).getDay();
   return jsDay === 0 ? 7 : jsDay;
 };
 
@@ -31,19 +31,29 @@ const isOperatingDay = (dateStr, policyDay) => {
   return policyDay.some(d => d.dayOfWeek === dayOfWeek);
 };
 
-// 날짜에 해당하는 policy 찾기
+// 날짜 기준 policy 찾기
 const getPolicyByDate = (dateStr, policyList, policyDay) => {
   const dayOfWeek = getDayOfWeek(dateStr);
-
   const matchDay = policyDay.find(d => d.dayOfWeek === dayOfWeek);
   if (!matchDay) return null;
 
   return policyList.find(p => p.id === matchDay.policyId) ?? null;
 };
 
-// 시간 슬롯 생성
-const generateTimeSlots = (policy) => {
-  if (!policy) return [];
+// 서버 슬롯 데이터에서 예약 인원 찾기
+const getReservedCount = (date, time, policyId, slots) => {
+  const target = slots.find(s =>
+    s.policyId === policyId &&
+    s.time === time &&
+    new Date(s.date).toISOString().slice(0, 10) === date
+  );
+
+  return target ? Number(target.reserved) : 0;
+};
+
+// 시간 슬롯 생성 (예약 인원 포함)
+const generateTimeSlots = (policy, date, slots) => {
+  if (!policy || !date) return [];
 
   const [openH, openM] = policy.openTime.split(":").map(Number);
   const [closeH, closeM] = policy.closeTime.split(":").map(Number);
@@ -51,32 +61,45 @@ const generateTimeSlots = (policy) => {
   const open = openH * 60 + openM;
   const close = closeH * 60 + closeM;
 
-  const slotMinutes = policy.slotHours;
+  const slotMinutes = policy.slotMinute;
   const lastStartTime = close - slotMinutes;
 
-  const slots = [];
+  const result = [];
   let current = open;
 
   while (current <= lastStartTime) {
     const h = Math.floor(current / 60);
     const m = current % 60;
 
-    slots.push(
-      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+    const time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+
+    const reserved = getReservedCount(
+      date,
+      time,
+      policy.id,
+      slots
     );
+
+    result.push({
+      time,
+      capacity: policy.capacityPerSlot,
+      reserved,
+    });
 
     current += slotMinutes;
   }
 
-  return slots;
+  return result;
 };
 
 export default function Reservation() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [popup, setPopup] = useState(null);
   const [policy, setPolicy] = useState([]);
   const [policyDay, setPolicyDay] = useState([]);
+  const [slots, setSlots] = useState([]);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
@@ -88,11 +111,30 @@ export default function Reservation() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getPopupOperation(id);
+
       if (response.status === 200) {
-        const { popup, policy, policyDay } = response.data;
+        const { popup, policy, policyDay, slots } = response.data;
+
         setPopup(popup);
         setPolicy(policy);
         setPolicyDay(policyDay);
+
+        // 🔥 여기서 슬롯 포맷 정리
+        const slotList = slots.map(item => {
+          return {
+            ...item,
+            // "2026-01-24T15:00:00.000Z" → "2026-01-24"
+            date: item.date.slice(0, 10),
+
+            // "10:30:00" → "10:30"
+            time: item.time.slice(0, 5),
+
+            // "3" → 3
+            reserved: Number(item.reserved),
+          };
+        });
+
+        setSlots(slotList);
       }
     };
 
@@ -135,7 +177,7 @@ export default function Reservation() {
 
   const timeSlots =
     selectedDate && activePolicy
-      ? generateTimeSlots(activePolicy)
+      ? generateTimeSlots(activePolicy, selectedDate, slots)
       : [];
 
   /* =====================
@@ -178,7 +220,6 @@ export default function Reservation() {
 
           const isAvailable = isDateAvailable(date);
           const isSelected = selectedDate === date;
-
           const jsDay = new Date(date).getDay();
 
           return (
@@ -207,16 +248,26 @@ export default function Reservation() {
         <>
           <h3 className={styles.subTitle}>시간 선택</h3>
           <div className={styles.timeGrid}>
-            {timeSlots.map(time => (
-              <button
-                key={time}
-                className={`${styles.time}
-                  ${selectedTime === time ? styles.timeSelected : ""}`}
-                onClick={() => setSelectedTime(time)}
-              >
-                {time}
-              </button>
-            ))}
+            {timeSlots.map(slot => {
+              const isSelected = selectedTime === slot.time;
+              const isFull = slot.reserved >= slot.capacity;
+
+              return (
+                <button
+                  key={slot.time}
+                  disabled={isFull}
+                  className={`${styles.time}
+                    ${isSelected ? styles.timeSelected : ""}
+                    ${isFull ? styles.full : ""}`}
+                  onClick={() => setSelectedTime(slot.time)}
+                >
+                  <div className={styles.timeLabel}>{slot.time}</div>
+                  <div className={styles.capacity}>
+                    {slot.reserved} / {slot.capacity}명
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </>
       )}
@@ -224,6 +275,16 @@ export default function Reservation() {
       <button
         className={styles.reserveBtn}
         disabled={!selectedDate || !selectedTime}
+        onClick={() =>
+          navigate(`/reservation/confirm`, {
+            state: {
+              popupId: popup.id,
+              date: selectedDate,
+              time: selectedTime,
+              policyId: activePolicy.id,
+            },
+          })
+        }
       >
         예약하기
       </button>

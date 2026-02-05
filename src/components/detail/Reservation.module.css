@@ -66,14 +66,13 @@
 
 /* 일요일 */
 .sunday {
-  color: #e53935; /* 빨간색 */
+  color: #e53935;
 }
 
 /* 토요일 */
 .saturday {
-  color: #1e88e5; /* 파란색 */
+  color: #1e88e5;
 }
-
 
 .selected {
   background: #000;
@@ -90,6 +89,10 @@
   margin-bottom: 16px;
 }
 
+/* =====================
+   시간 선택 영역
+===================== */
+
 .timeGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -103,13 +106,55 @@
   background: #fff;
   border-radius: 6px;
   cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  transition: all 0.15s ease;
 }
 
+.time:hover {
+  border-color: #000;
+}
+
+.timeLabel {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.capacity {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 선택됨 */
 .timeSelected {
   background: #000;
   color: #fff;
   border-color: #000;
 }
+
+.timeSelected .capacity {
+  color: #ddd;
+}
+
+/* 매진 상태 */
+.full {
+  background: #f5f5f5;
+  color: #aaa;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+.full .capacity {
+  color: #aaa;
+}
+
+/* =====================
+   예약 버튼
+===================== */
 
 .reserveBtn {
   width: 100%;
@@ -118,8 +163,10 @@
   color: #fff;
   border: none;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .reserveBtn:disabled {
   background: #ccc;
+  cursor: not-allowed;
 }

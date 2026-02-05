@@ -1,10 +1,11 @@
+import {showSuccess} from '@/utils/swal.js'
 import { AuthContext } from "@/auth/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
 export default function Header({ onLoginClick }) {
-  const { user, loading } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext); // setUser 추가
   const navigate = useNavigate();
 
   const handleClickLogo = () => {
@@ -15,6 +16,13 @@ export default function Header({ onLoginClick }) {
     if (!user) {
       onLoginClick();
     }
+  };
+
+  const handleLogout = () => {
+    showSuccess('로그아웃 되었습니다.')
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    navigate("/home");
   };
 
   return (
@@ -50,6 +58,12 @@ export default function Header({ onLoginClick }) {
             {user?.email || "로그인"}
           </li>
         </button>
+
+        {user && (
+          <button onClick={handleLogout}>
+            <li>로그아웃</li>
+          </button>
+        )}
 
         <button>
           <li>

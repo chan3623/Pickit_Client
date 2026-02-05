@@ -1,3 +1,4 @@
+import { showSuccess, showError } from "@/utils/swal";
 import { AuthContext } from "@/auth/AuthContext";
 import { login } from "@/services/auth.api";
 import { getUser } from "@/services/user.api";
@@ -5,7 +6,7 @@ import { useContext, useState } from "react";
 import styles from "./LoginModal.module.css";
 
 export default function LoginModal({ isOpen, onClose, onSignupClick }) {
-  const { setUser } = useContext(AuthContext); // 🔹 추가
+  const { setUser } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,9 +28,12 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
+      showSuccess("로그인 성공");
+
       const userRes = await getUser();
       setUser(userRes.data);
     } catch (e) {
+      showError("로그인 실패", "아이디 또는 비밀번호를 확인해주세요.");
       console.log("로그인 실패:", e);
     } finally {
       onClose();
