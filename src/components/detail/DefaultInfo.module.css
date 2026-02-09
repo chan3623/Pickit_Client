@@ -37,12 +37,12 @@
     height: 100%;
 }
 
-.infoInnerBox{
-    height : 520px;
-    display : flex;
-    flex-direction : column;
+.infoInnerBox {
+    height: 520px;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items : flex-start;
+    align-items: flex-start;
 }
 
 .textInnerBox {
@@ -56,25 +56,33 @@
 
 }
 
-.listBox{
+.listBox {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
 
-    margin-bottom : 30px;
+    margin-bottom: 30px;
 }
 
-.rangeBox{
-    font-size : 20px;
+.listBox>h1 {
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
 }
 
-.carAndPriceInnerBox{
+.rangeBox {
+    font-size: 20px;
+}
+
+.carAndPriceInnerBox {
     width: 100%;
 }
 
-.carAndPriceBox{
-    width : 100%;
+.carAndPriceBox {
+    width: 100%;
 }
 
 .carAndPriceBox>p {
@@ -85,7 +93,7 @@
     border-bottom: 3px solid #000;
 }
 
-.infoListBox{
+.infoListBox {
     width: 100%;
     display: flex;
     /* 가로 나열 */
@@ -109,7 +117,7 @@
     width: 36px;
     height: 36px;
     object-fit: contain;
-    background-color : #000;
+    background-color: #000;
     /* 이미지 비율 유지 */
 }
 

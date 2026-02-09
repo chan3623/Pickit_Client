@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
         element: <DetailPage />,
       },
       {
-        path: "/reservation/confirm",
+        path: "/reservation",
         element: <ReservationPage />,
       },
     ],
