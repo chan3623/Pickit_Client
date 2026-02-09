@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
 export default function Header({ onLoginClick }) {
-  const { user, setUser } = useContext(AuthContext); // setUser 추가
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleClickLogo = () => {

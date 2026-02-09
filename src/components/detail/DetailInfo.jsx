@@ -1,6 +1,7 @@
-import { getPopupDescription } from "@/services/detail.api";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/auth/AuthContext";
+import { useContext, useState } from "react";
+import LoginModal from "@/components/common/LoginModal";
 import style from "./DetailInfo.module.css";
 
 const formatPhoneNumber = (tel) => {
@@ -19,21 +20,23 @@ const formatPhoneNumber = (tel) => {
   return tel;
 };
 
-export default function DetailInfo() {
-  const { id } = useParams();
-  const [detail, setDetail] = useState({ description: "", tel: "" });
+export default function DetailInfo({data}) {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getPopupDescription(id);
-      if (response.status === 200) {
-        setDetail(response.data);
-      }
-    };
+  const handleMoveReservation = async () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
 
-    fetchData();
-  }, [id]);
+    navigate("/reservation", {
+      state: {
+        popupId: data.id,
+      },
+    });
+  };
 
   return (
     <div className={style.detailBox}>
@@ -42,24 +45,19 @@ export default function DetailInfo() {
 
         <div className={style.telInnerBox}>
           <p>* 문의사항</p>
-          <p>{formatPhoneNumber(detail.tel)}</p>
+          <p>{formatPhoneNumber(data.tel)}</p>
         </div>
       </div>
 
-      <div className={style.textBox}>{detail.description}</div>
+      <div className={style.textBox}>{data.description}</div>
 
       <button
         className={style.moveBtn}
-        onClick={() =>
-          navigate(`/reservation`, {
-            state: {
-              popupId: id,
-            },
-          })
-        }
+        onClick={handleMoveReservation}
       >
         예약하러 가기
       </button>
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 }

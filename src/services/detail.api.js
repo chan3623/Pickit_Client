@@ -10,7 +10,7 @@ export async function getPopup(popupId) {
   return res;
 }
 
-export async function getPopupDescription(popupId) {
+export async function getPopupDetail(popupId) {
   const res = await api.get(`/popup/detail/${popupId}`);
   return res;
 }

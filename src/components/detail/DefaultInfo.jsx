@@ -1,7 +1,4 @@
 import style from "./DefaultInfo.module.css";
-import { useParams } from "react-router-dom";
-import { getPopupOperation } from "@/services/detail.api";
-import { useEffect, useState } from "react";
 
 const DAY_MAP = {
   1: "월",
@@ -13,63 +10,40 @@ const DAY_MAP = {
   7: "일",
 };
 
-export default function DefaultInfo() {
-  const { id } = useParams();
+export default function DefaultInfo({ data }) {
+  if (!data || !data.popup || !Array.isArray(data.dayOfInfo)) return null;
 
-  const [popup, setPopup] = useState(null);
-  const [policy, setPolicy] = useState(null);
-  const [policyDay, setPolicyDay] = useState([]);
+  const { popup, dayOfInfo } = data;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getPopupOperation(id);
-      if (response.status === 200) {
-        const { popup, policy, policyDay } = response.data;
-        setPopup(popup);
-        setPolicy(policy);
-        setPolicyDay(policyDay);
-      }
-    };
-    fetchData();
-  }, [id]);
-
-  if (!popup || !policy) return null;
-
-const formatDate = (date) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const formatTime = (time) => time?.slice(0, 5);
 
-const operatingTimeList = policyDay
-  .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
-  .map((day) => {
-    const matchedPolicy = policy.find(
-      (p) => p.id === day.policyId
-    );
-
-    if (!matchedPolicy) return null;
-
-    return {
-      day: DAY_MAP[day.dayOfWeek],
-      open: formatTime(matchedPolicy.openTime),
-      close: formatTime(matchedPolicy.closeTime),
-    };
-  })
-  .filter(Boolean);
+  const operatingTimeList = [...dayOfInfo]
+    .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
+    .map((info) => ({
+      id: info.id,
+      day: DAY_MAP[info.dayOfWeek],
+      open: formatTime(info.openTime),
+      close: formatTime(info.closeTime),
+      slotMinute: info.slotMinute,
+      capacity: info.capacityPerSlot,
+    }));
 
   const infoData = [
     {
       id: popup.park ? "park" : "no-park",
-      text: popup.park ? "주차가능" : "주차불가",
+      text: popup.park ? "주차 가능" : "주차 불가",
     },
     {
-      id: popup.is_free ? "free" : "paid",
-      text: popup.is_free ? "입장료 무료" : "입장료 유료",
+      id: popup.isFree ? "free" : "paid",
+      text: popup.isFree ? "입장료 무료" : "입장료 유료",
     },
   ];
 
@@ -77,7 +51,11 @@ const operatingTimeList = policyDay
     <div className={style.defaultInfoBox}>
       <div className={style.imageInfoInnerBox}>
         <div className={style.imageBox}>
-          <img className={style.image} src={`http://localhost:3000${popup.imagePath}`} />
+          <img
+            className={style.image}
+            src={`http://localhost:3000${popup.imagePath}`}
+            alt={popup.title}
+          />
         </div>
 
         <div className={style.infoInnerBox}>
@@ -93,16 +71,18 @@ const operatingTimeList = policyDay
             </li>
 
             <li className={style.listBox}>
-              <div>
-                {popup.address}
-              </div>
+              <div>{popup.address}</div>
             </li>
 
             <li className={style.listBox}>
               <ul>
                 {operatingTimeList.map((item) => (
-                  <li key={item.day}>
-                    {item.day} : {item.open} - {item.close}
+                  <li key={item.id}>
+                    {item.day}요일 : {item.open} - {item.close}
+                    <span>
+                      {" "}
+                      ( {item.slotMinute}분 / 최대 {item.capacity}명 )
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -111,7 +91,7 @@ const operatingTimeList = policyDay
 
           <div className={style.carAndPriceInnerBox}>
             <div className={style.carAndPriceBox}>
-              <p>주차 및 입장료</p>
+              <p>주차 및 입장 정보</p>
             </div>
 
             <ul className={style.infoListBox}>
