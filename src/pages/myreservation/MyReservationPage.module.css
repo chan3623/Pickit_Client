@@ -1,0 +1,19 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fff;
+  position: relative;
+  overflow-y: auto;
+  padding-top: 80px; /* header offset */
+}
+
+.pageTitle {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #25316D;
+  margin-bottom: 20px;
+}

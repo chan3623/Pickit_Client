@@ -64,8 +64,7 @@ export default function Header({ onLoginClick }) {
             <li>로그아웃</li>
           </button>
         )}
-
-        <button>
+        <button onClick={() => navigate("/myreservations")}>
           <li>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +92,7 @@ export default function Header({ onLoginClick }) {
             내 예약
           </li>
         </button>
+        
       </nav>
     </header>
   );

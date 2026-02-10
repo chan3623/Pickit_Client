@@ -36,7 +36,6 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
 
       showSuccess("로그인 성공");
 
-      // ✅ 로그인 후 즉시 유저 정보 가져와 Context에 반영
       const userRes = await getUser();
       setUser(userRes.data);
 
@@ -50,7 +49,7 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={handleClose}>
+    <div className={styles.modalOverlay}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={handleClose}>
           ×

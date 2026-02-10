@@ -1,5 +1,5 @@
 import { registerAdmin, registerUser } from "@/services/auth.api";
-import { showError } from "@/utils/swal";
+import { showSuccess, showError } from "@/utils/swal";
 import { useState } from "react";
 import styles from "./LoginModal.module.css";
 
@@ -32,9 +32,12 @@ export default function SignupModal({ isOpen, onClose }) {
         activeTab === "user"
           ? await registerUser(signupData)
           : await registerAdmin(signupData);
-      console.log("Signup Success:", response);
 
-      handleClose();
+      if(response.status === 201){
+        showSuccess("정상적으로 회원가입 되었습니다.")
+        handleClose();
+      }
+
     } catch (error) {
       showError(error.customMessage);
     }

@@ -4,6 +4,7 @@ import HomePage from "@/pages/home/HomePage";
 // import LoginPage from "@/pages/login/LoginPage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ReservationPage from "../pages/reservation/ReservationPage";
+import MyReservationPage from "../pages/myreservation/MyReservationPage"; // Import MyReservationPage
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "/reservation",
         element: <ReservationPage />,
+      },
+      {
+        path: "/myreservations",
+        element: <MyReservationPage />,
       },
     ],
   },

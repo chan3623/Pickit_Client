@@ -54,12 +54,14 @@ export const showConfirm = async (title = '확인', text = '') => {
  * @param {string} text 내용
  * @param {number} timer 자동 닫힘 시간(ms)
  */
-export const showInfo = (title = "알림", text = "", timer = 1500) => {
-  Swal.fire({
+export const showInfo = (title = "알림", text = "", timer = 0) => {
+  return Swal.fire({
     icon: "info",
     title,
     text,
-    timer,
-    showConfirmButton: false,
+    timer, // 0이면 자동으로 닫히지 않음
+    showConfirmButton: true, // 확인 버튼 표시
+    timerProgressBar: false, // 자동 닫힘 없으므로 필요 없음
   });
 };
+

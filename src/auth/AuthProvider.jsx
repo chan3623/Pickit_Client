@@ -3,6 +3,7 @@ import { getUser } from "@/services/user.api";
 import { jwtDecode } from "jwt-decode";
 import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
+import { showInfo } from "@/utils/swal";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -13,7 +14,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setUser(null);
-    window.location.href = "/home";
+    showInfo("세션이 만료되어 로그아웃 되었습니다.").then(() => {
+      window.location.href = "/home";
+    });
   }, []);
 
   const scheduleLogout = useCallback(
