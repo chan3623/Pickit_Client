@@ -1,4 +1,3 @@
-// src/app/App.jsx
 import { AuthProvider } from "@/auth/AuthProvider";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";

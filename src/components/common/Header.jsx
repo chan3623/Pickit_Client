@@ -1,5 +1,5 @@
-import {showSuccess} from '@/utils/swal.js'
 import { AuthContext } from "@/auth/AuthContext";
+import { showSuccess } from "@/utils/swal.js";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
@@ -19,7 +19,7 @@ export default function Header({ onLoginClick }) {
   };
 
   const handleLogout = () => {
-    showSuccess('로그아웃 되었습니다.')
+    showSuccess("로그아웃 되었습니다.");
     setUser(null);
     localStorage.removeItem("accessToken");
     navigate("/home");

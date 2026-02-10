@@ -1,4 +1,5 @@
 import { registerAdmin, registerUser } from "@/services/auth.api";
+import { showError } from "@/utils/swal";
 import { useState } from "react";
 import styles from "./LoginModal.module.css";
 
@@ -17,11 +18,14 @@ export default function SignupModal({ isOpen, onClose }) {
     setPassword("");
   };
 
+  const handleClose = () => {
+    setEmail("");
+    setPassword("");
+    onClose();
+  };
+
   const handleSignup = async () => {
-    const signupData = {
-      email,
-      password,
-    };
+    const signupData = { email, password };
 
     try {
       const response =
@@ -29,16 +33,17 @@ export default function SignupModal({ isOpen, onClose }) {
           ? await registerUser(signupData)
           : await registerAdmin(signupData);
       console.log("Signup Success:", response);
-      onClose();
+
+      handleClose();
     } catch (error) {
-      console.error("Signup Error:", error);
+      showError(error.customMessage);
     }
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <button className={styles.closeButton} onClick={handleClose}>
           ×
         </button>
 

@@ -1,17 +1,23 @@
-import { showSuccess, showError } from "@/utils/swal";
 import { AuthContext } from "@/auth/AuthContext";
 import { login } from "@/services/auth.api";
 import { getUser } from "@/services/user.api";
+import { showError, showSuccess } from "@/utils/swal";
 import { useContext, useState } from "react";
 import styles from "./LoginModal.module.css";
 
 export default function LoginModal({ isOpen, onClose, onSignupClick }) {
-  const { setUser } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser, scheduleLogout } = useContext(AuthContext);
 
   if (!isOpen) return null;
+
+  const handleClose = () => {
+    setEmail("");
+    setPassword("");
+    onClose();
+  };
 
   const handleTabChange = (tab) => {
     if (tab === activeTab) return;
@@ -30,20 +36,23 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
 
       showSuccess("로그인 성공");
 
+      // ✅ 로그인 후 즉시 유저 정보 가져와 Context에 반영
       const userRes = await getUser();
       setUser(userRes.data);
+
+      scheduleLogout(accessToken);
     } catch (e) {
-      showError("로그인 실패", "아이디 또는 비밀번호를 확인해주세요.");
+      showError(e.customMessage || "로그인 실패");
       console.log("로그인 실패:", e);
     } finally {
-      onClose();
+      handleClose();
     }
   };
 
   return (
-    <div className={styles.modalOverlay} >
+    <div className={styles.modalOverlay} onClick={handleClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <button className={styles.closeButton} onClick={handleClose}>
           ×
         </button>
 

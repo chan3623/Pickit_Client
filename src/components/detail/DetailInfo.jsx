@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/auth/AuthContext";
-import { useContext, useState } from "react";
 import LoginModal from "@/components/common/LoginModal";
+import SignupModal from "@/components/common/SignupModal";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import style from "./DetailInfo.module.css";
 
 const formatPhoneNumber = (tel) => {
@@ -20,10 +21,11 @@ const formatPhoneNumber = (tel) => {
   return tel;
 };
 
-export default function DetailInfo({data}) {
+export default function DetailInfo({ data }) {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
 
   const handleMoveReservation = async () => {
     if (!user) {
@@ -36,6 +38,11 @@ export default function DetailInfo({data}) {
         popupId: data.id,
       },
     });
+  };
+
+  const handleSignupOpen = () => {
+    setShowLoginModal(false);
+    setShowSignupModal(true);
   };
 
   return (
@@ -51,13 +58,18 @@ export default function DetailInfo({data}) {
 
       <div className={style.textBox}>{data.description}</div>
 
-      <button
-        className={style.moveBtn}
-        onClick={handleMoveReservation}
-      >
+      <button className={style.moveBtn} onClick={handleMoveReservation}>
         예약하러 가기
       </button>
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSignupClick={handleSignupOpen}
+      />
+      <SignupModal
+        isOpen={showSignupModal}
+        onClose={() => setShowSignupModal(false)}
+      />
     </div>
   );
 }
