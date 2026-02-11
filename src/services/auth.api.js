@@ -1,4 +1,4 @@
-import api from "../utils/axios";
+import api from "../lib/axios";
 
 export async function registerUser({ email, password }) {
   return api.post("/user", { email, password });

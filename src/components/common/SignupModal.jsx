@@ -1,5 +1,5 @@
+import { showError, showSuccess } from "@/lib/swal";
 import { registerAdmin, registerUser } from "@/services/auth.api";
-import { showSuccess, showError } from "@/utils/swal";
 import { useState } from "react";
 import styles from "./LoginModal.module.css";
 
@@ -33,11 +33,10 @@ export default function SignupModal({ isOpen, onClose }) {
           ? await registerUser(signupData)
           : await registerAdmin(signupData);
 
-      if(response.status === 201){
-        showSuccess("정상적으로 회원가입 되었습니다.")
+      if (response.status === 201) {
+        showSuccess("정상적으로 회원가입 되었습니다.");
         handleClose();
       }
-
     } catch (error) {
       showError(error.customMessage);
     }

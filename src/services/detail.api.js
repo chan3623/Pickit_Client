@@ -1,4 +1,4 @@
-import api from "../utils/axios";
+import api from "../lib/axios";
 
 export async function getPopupOperation(popupId) {
   const res = await api.get(`/popup/operation/${popupId}`);

@@ -1,36 +1,17 @@
+import { ENV } from "@/config/env";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getRandomPopups } from "@/services/home.api";
 import { useNavigate } from "react-router-dom";
 import style from "./HomeSlide.module.css";
 
-const BASE_URL = "http://localhost:3000";
+export default function HomeSlide({ data }) {
+  const popups = data;
 
-export default function HomeSlide() {
-  const [popups, setPopups] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(popups.length);
   const [isTransition, setIsTransition] = useState(false);
-
   const navigate = useNavigate();
 
   const ITEM_WIDTH = 460;
   const AUTO_PLAY_TIME = 2000;
-
-  /* ------------------------------
-   * 데이터 조회
-   * ------------------------------ */
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getRandomPopups();
-      if (response.status === 200) {
-        const data = response.data;
-
-        setPopups(data);
-        setIndex(data.length); // 무한 슬라이드 기준점
-      }
-    };
-
-    fetchData();
-  }, []);
 
   /* ------------------------------
    * 슬라이드용 확장 데이터
@@ -123,7 +104,7 @@ export default function HomeSlide() {
               >
                 {!isCenter && <div className={style.overlay} />}
                 <img
-                  src={`${BASE_URL}${popup.imagePath}`}
+                  src={`${ENV.API_BASE_URL}${popup.imagePath}`}
                   alt={`popup-${popup.id}`}
                   className={style.slideImg}
                 />

@@ -17,6 +17,31 @@ const toKSTDateString = (isoDateStr) => {
   return `${y}-${m}-${d}`;
 };
 
+// ✅ 현재 KST 날짜 문자열 반환
+const getCurrentKSTDate = () => {
+  const now = new Date();
+  const kstOffset = 9 * 60; // KST는 UTC+9
+  const kstTime = new Date(now.getTime() + kstOffset * 60 * 1000);
+
+  const y = kstTime.getUTCFullYear();
+  const m = String(kstTime.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(kstTime.getUTCDate()).padStart(2, "0");
+
+  return `${y}-${m}-${d}`;
+};
+
+// ✅ 현재 KST 시간 (HH:MM 형식) 반환
+const getCurrentKSTTime = () => {
+  const now = new Date();
+  const kstOffset = 9 * 60;
+  const kstTime = new Date(now.getTime() + kstOffset * 60 * 1000);
+
+  const h = String(kstTime.getUTCHours()).padStart(2, "0");
+  const m = String(kstTime.getUTCMinutes()).padStart(2, "0");
+
+  return `${h}:${m}`;
+};
+
 const isWithinPopupPeriod = (dateStr, popup) => {
   const date = new Date(dateStr);
   const start = new Date(popup.startDate);
@@ -33,12 +58,11 @@ const getDayOfWeek = (dateStr) => {
   return jsDay === 0 ? 7 : jsDay;
 };
 
-// ✅ 여기서 timezone 보정
 const normalizeReservations = (reservations) => {
   const map = new Map();
 
   reservations.forEach((r) => {
-    const date = toKSTDateString(r.date); // ← 핵심 수정
+    const date = toKSTDateString(r.date);
     const time = r.time.slice(0, 5);
     const key = `${date}_${time}`;
 
@@ -48,7 +72,22 @@ const normalizeReservations = (reservations) => {
   return map;
 };
 
-const generateTimeSlots = (dayInfo, date, reservationMap) => {
+// ✅ 시간대가 현재 시간 이후인지 체크
+const isTimeSlotAvailable = (date, time, currentDate, currentTime) => {
+  if (date > currentDate) return true; // 미래 날짜는 모두 가능
+  if (date < currentDate) return false; // 과거 날짜는 모두 불가능
+
+  // 오늘 날짜인 경우, 시간 비교
+  return time > currentTime;
+};
+
+const generateTimeSlots = (
+  dayInfo,
+  date,
+  reservationMap,
+  currentDate,
+  currentTime,
+) => {
   if (!dayInfo) return [];
 
   const [openH, openM] = dayInfo.openTime.split(":").map(Number);
@@ -68,11 +107,20 @@ const generateTimeSlots = (dayInfo, date, reservationMap) => {
     const key = `${date}_${time}`;
     const reserved = reservationMap.get(key) ?? 0;
 
+    // ✅ 과거 시간대인지 체크
+    const isPastTime = !isTimeSlotAvailable(
+      date,
+      time,
+      currentDate,
+      currentTime,
+    );
+
     result.push({
       time,
       capacity: dayInfo.capacityPerSlot,
       reserved,
-      available: dayInfo.capacityPerSlot - reserved,
+      available: isPastTime ? 0 : dayInfo.capacityPerSlot - reserved, // 과거 시간은 예약 불가
+      isPastTime, // UI에서 사용할 수 있도록 플래그 추가
     });
 
     current += dayInfo.slotMinute;
@@ -83,6 +131,9 @@ const generateTimeSlots = (dayInfo, date, reservationMap) => {
 
 export default function Reservation({ data, onSubmitReservation }) {
   const { popup, dayInfos, reservations } = data;
+  console.log("popup : ", popup);
+  console.log("dayInfos : ", dayInfos);
+  console.log("reservations : ", reservations);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
@@ -95,6 +146,10 @@ export default function Reservation({ data, onSubmitReservation }) {
     () => normalizeReservations(reservations),
     [reservations],
   );
+
+  // ✅ 현재 KST 날짜와 시간 가져오기
+  const currentKSTDate = getCurrentKSTDate();
+  const currentKSTTime = getCurrentKSTTime();
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
@@ -110,8 +165,14 @@ export default function Reservation({ data, onSubmitReservation }) {
     );
   }
 
+  let dayOfWeek;
+
   const isDateAvailable = (date) => {
-    const dayOfWeek = getDayOfWeek(date);
+    dayOfWeek = getDayOfWeek(date);
+
+    // ✅ 과거 날짜 체크 추가
+    if (date < currentKSTDate) return false;
+
     return (
       isWithinPopupPeriod(date, popup) &&
       dayInfos.some((d) => d.dayOfWeek === dayOfWeek)
@@ -124,7 +185,13 @@ export default function Reservation({ data, onSubmitReservation }) {
 
   const timeSlots =
     selectedDate && activeDayInfo
-      ? generateTimeSlots(activeDayInfo, selectedDate, reservationMap)
+      ? generateTimeSlots(
+          activeDayInfo,
+          selectedDate,
+          reservationMap,
+          currentKSTDate,
+          currentKSTTime,
+        )
       : [];
 
   const selectedSlot = timeSlots.find((t) => t.time === selectedTime);
@@ -132,10 +199,7 @@ export default function Reservation({ data, onSubmitReservation }) {
     selectedSlot && count > 0 && count <= selectedSlot.available;
 
   const isFormValid =
-    selectedDate &&
-    selectedTime &&
-    phone.trim() &&
-    isCountValid;
+    selectedDate && selectedTime && phone.trim() && isCountValid;
 
   const handleSubmit = () => {
     if (!isFormValid) return;
@@ -143,6 +207,7 @@ export default function Reservation({ data, onSubmitReservation }) {
     onSubmitReservation({
       popupId: popup.id,
       date: selectedDate,
+      dayOfWeek,
       time: selectedTime,
       phone,
       count,
@@ -152,9 +217,15 @@ export default function Reservation({ data, onSubmitReservation }) {
   return (
     <section className={styles.wrapper}>
       <div className={styles.monthHeader}>
-        <button onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}>‹</button>
-        <span>{year}년 {month + 1}월</span>
-        <button onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}>›</button>
+        <button onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}>
+          ‹
+        </button>
+        <span>
+          {year}년 {month + 1}월
+        </span>
+        <button onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}>
+          ›
+        </button>
       </div>
 
       <div className={styles.weekdays}>
@@ -202,7 +273,9 @@ export default function Reservation({ data, onSubmitReservation }) {
                 >
                   <div>{slot.time}</div>
                   <div className={styles.capacity}>
-                    {slot.reserved} / {slot.capacity}명
+                    {slot.isPastTime
+                      ? "지난 시간"
+                      : `${slot.reserved} / ${slot.capacity}명`}
                   </div>
                 </button>
               );

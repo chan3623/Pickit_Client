@@ -1,9 +1,9 @@
 // AuthProvider.jsx
+import { showInfo } from "@/lib/swal";
 import { getUser } from "@/services/user.api";
 import { jwtDecode } from "jwt-decode";
 import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { showInfo } from "@/utils/swal";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

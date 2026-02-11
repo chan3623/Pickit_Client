@@ -1,4 +1,4 @@
-import api from "../utils/axios";
+import api from "../lib/axios";
 
 export async function getPopupReservation(popupId) {
   const res = await api.get(`/popup/reservation/${popupId}`);
@@ -6,7 +6,7 @@ export async function getPopupReservation(popupId) {
 }
 
 export async function postPopupReservation(reservationPayload) {
-  const res = await api.post(`/popup/reservation`, reservationPayload)
+  const res = await api.post(`/popup/reservation`, reservationPayload);
 
   return res;
 }

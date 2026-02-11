@@ -1,9 +1,12 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  getPopupReservation,
+  postPopupReservation,
+} from "@/services/reservation.api";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Reservation from "../../components/reservation/Reservation";
+import { showError, showSuccess } from "../../lib/swal";
 import styles from "./ReservationPage.module.css";
-import { getPopupReservation, postPopupReservation } from "@/services/reservation.api";
-import { showSuccess } from "../../utils/swal";
 
 export default function ReservationPage() {
   const location = useLocation();
@@ -27,20 +30,41 @@ export default function ReservationPage() {
   }, [popupId]);
 
   const handleSubmitReservation = async (reservationPayload) => {
-    const response = await postPopupReservation(reservationPayload)
+    try {
+      const response = await postPopupReservation(reservationPayload);
 
-    if(response.data && response.status === 201){
-      showSuccess('예약되었습니다.');
-      
-      navigate('/home')
+      if (response.data && response.status === 201) {
+        showSuccess("예약되었습니다.");
+        navigate("/home");
+      }
+    } catch (e) {
+      showError(e.customMessage);
     }
   };
+
+  // const handleSubmitReservation = async (reservationPayload) => {
+  //   try {
+  //     const [res1, res2] = await Promise.all([
+  //       postPopupReservation(reservationPayload),
+  //       postPopupReservation(reservationPayload),
+  //     ]);
+
+  //     console.log("res1:", res1);
+  //     console.log("res2:", res2);
+
+  //     showSuccess("예약되었습니다.");
+  //     navigate("/home");
+  //   } catch (e) {
+  //     console.error("동시 요청 중 하나 실패", e);
+  //     showError(e.customMessage);
+  //   }
+  // };
 
   if (loading) return <div>로딩중...</div>;
 
   return (
     <div className={styles.page}>
-      <Reservation data={data} onSubmitReservation={handleSubmitReservation}/>
+      <Reservation data={data} onSubmitReservation={handleSubmitReservation} />
     </div>
   );
 }

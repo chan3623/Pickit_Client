@@ -1,7 +1,7 @@
 import { AuthContext } from "@/auth/AuthContext";
+import { showError, showSuccess } from "@/lib/swal";
 import { login } from "@/services/auth.api";
 import { getUser } from "@/services/user.api";
-import { showError, showSuccess } from "@/utils/swal";
 import { useContext, useState } from "react";
 import styles from "./LoginModal.module.css";
 

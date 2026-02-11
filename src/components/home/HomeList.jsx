@@ -1,11 +1,23 @@
-import { getPopups } from "@/services/home.api";
+import { ENV } from "@/config/env";
+import { useNavigate } from "react-router-dom";
 import style from "./HomeList.module.css";
 
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+export default function HomeList({ data }) {
+  const popupList = data.map((item) => {
+    const startDate = new Date(item.startDate);
+    const endDate = new Date(item.endDate);
 
-export default function HomeList() {
-  const [popupList, setPopupList] = useState([]);
+    const kstStartDate = new Date(startDate.getTime() + 9 * 60 * 60 * 1000);
+    const kstEndDate = new Date(endDate.getTime() + 9 * 60 * 60 * 1000);
+    return {
+      ...item,
+      startDate: kstStartDate.toISOString().split("T")[0],
+      endDate: kstEndDate.toISOString().split("T")[0],
+      src: `${ENV.API_BASE_URL}${item.imagePath}`,
+    };
+  });
+
+  // const [popupList, setPopupList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -13,34 +25,34 @@ export default function HomeList() {
     navigate(`/detail/${popupId}`);
   };
 
-  useEffect(() => {
-    const selectPopups = async () => {
-      const response = await getPopups();
-      if (response.status === 200 && response.statusText === "OK") {
-        const { data } = response;
+  // useEffect(() => {
+  //   const selectPopups = async () => {
+  //     const response = await getPopups();
+  //     if (response.status === 200 && response.statusText === "OK") {
+  //       const { data } = response;
 
-        const selectPopupList = data.map((item) => {
-          const startDate = new Date(item.startDate);
-          const endDate = new Date(item.endDate);
+  //       const selectPopupList = data.map((item) => {
+  //         const startDate = new Date(item.startDate);
+  //         const endDate = new Date(item.endDate);
 
-          const kstStartDate = new Date(
-            startDate.getTime() + 9 * 60 * 60 * 1000,
-          );
-          const kstEndDate = new Date(endDate.getTime() + 9 * 60 * 60 * 1000);
-          return {
-            ...item,
-            startDate: kstStartDate.toISOString().split("T")[0],
-            endDate: kstEndDate.toISOString().split("T")[0],
-            src: `http://localhost:3000${item.imagePath}`,
-          };
-        });
+  //         const kstStartDate = new Date(
+  //           startDate.getTime() + 9 * 60 * 60 * 1000,
+  //         );
+  //         const kstEndDate = new Date(endDate.getTime() + 9 * 60 * 60 * 1000);
+  //         return {
+  //           ...item,
+  //           startDate: kstStartDate.toISOString().split("T")[0],
+  //           endDate: kstEndDate.toISOString().split("T")[0],
+  //           src: `http://localhost:3000${item.imagePath}`,
+  //         };
+  //       });
 
-        setPopupList(selectPopupList);
-      }
-    };
+  //       setPopupList(selectPopupList);
+  //     }
+  //   };
 
-    selectPopups();
-  }, []);
+  //   selectPopups();
+  // }, []);
 
   return (
     <div className={style.listBox}>

@@ -1,5 +1,5 @@
 import { AuthContext } from "@/auth/AuthContext";
-import { showSuccess } from "@/utils/swal.js";
+import { showSuccess } from "@/lib/swal.js";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
@@ -92,7 +92,6 @@ export default function Header({ onLoginClick }) {
             내 예약
           </li>
         </button>
-        
       </nav>
     </header>
   );
