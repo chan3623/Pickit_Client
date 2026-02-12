@@ -14,6 +14,7 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
   if (!isOpen) return null;
 
   const handleClose = () => {
+    setActiveTab("user");
     setEmail("");
     setPassword("");
     onClose();
@@ -28,7 +29,14 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
 
   const handleLogin = async () => {
     try {
-      const res = await login({ email, password });
+      const loginType = activeTab === "admin" ? 1 : 2;
+
+      const res = await login({
+        email,
+        password,
+        loginType,
+      });
+
       const { accessToken, refreshToken } = res.data;
 
       localStorage.setItem("accessToken", accessToken);
@@ -51,9 +59,7 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={handleClose}>
-          ×
-        </button>
+        <button className={styles.closeButton} onClick={handleClose}>×</button>
 
         <h2 className={styles.title}>로그인</h2>
 
@@ -65,8 +71,8 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
             일반
           </button>
           <button
-            className={`${styles.tabButton} ${activeTab === "seller" ? styles.active : ""}`}
-            onClick={() => handleTabChange("seller")}
+            className={`${styles.tabButton} ${activeTab === "admin" ? styles.active : ""}`}
+            onClick={() => handleTabChange("admin")}
           >
             관리자
           </button>
@@ -76,7 +82,6 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
           <label>이메일</label>
           <input
             type="email"
-            placeholder="이메일을 입력해주세요"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
@@ -87,7 +92,6 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
           <label>비밀번호</label>
           <input
             type="password"
-            placeholder="비밀번호를 입력해주세요"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
@@ -100,11 +104,7 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
 
         <div className={styles.switchText}>
           아직 회원이 아니신가요?
-          <button
-            type="button"
-            className={styles.switchButton}
-            onClick={onSignupClick}
-          >
+          <button type="button" className={styles.switchButton} onClick={onSignupClick}>
             회원가입
           </button>
         </div>

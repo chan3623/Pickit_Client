@@ -1,6 +1,6 @@
 import HomeList from "@/components/home/HomeList";
 import HomeSlide from "@/components/home/HomeSlide";
-import { getPopups, getRandomPopups } from "@/services/home.api";
+import { getPopups, getRandomPopups } from "@/services/popup.api";
 import { useEffect, useState } from "react";
 import styles from "./HomePage.module.css";
 

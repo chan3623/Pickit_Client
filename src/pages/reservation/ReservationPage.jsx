@@ -1,7 +1,7 @@
 import {
   getPopupReservation,
   postPopupReservation,
-} from "@/services/reservation.api";
+} from "@/services/popup.api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Reservation from "../../components/reservation/Reservation";

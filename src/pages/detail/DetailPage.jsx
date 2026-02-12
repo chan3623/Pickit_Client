@@ -1,6 +1,6 @@
 import DefaultInfo from "@/components/detail/DefaultInfo";
 import DetailInfo from "@/components/detail/DetailInfo";
-import { getPopupDetail } from "@/services/detail.api";
+import { getPopupDetail } from "@/services/popup.api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./DetailPage.module.css";

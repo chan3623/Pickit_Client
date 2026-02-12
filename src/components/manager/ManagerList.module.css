@@ -1,0 +1,121 @@
+.list {
+  width: 1115px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+}
+
+.thumb {
+  width: 96px;
+  height: 72px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.titleLine {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.titleLine h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #020617;
+}
+
+.active {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.inactive {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.period {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.manage {
+  background: #ecfeff;
+  color: #0e7490;
+}
+
+.edit {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.empty {
+  text-align: center;
+  padding: 100px 0;
+  color: #64748b;
+}
+
+.empty strong {
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 8px;
+}

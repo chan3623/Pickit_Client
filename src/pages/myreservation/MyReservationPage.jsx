@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./MyReservationPage.module.css";
 import MyReservationList from "@/components/myreservation/MyReservationList";
-import { getUserReservations } from "@/services/user.api";
+import { getUserReservations } from "@/services/popup.api";
 
 export default function MyReservationPage() {
   const [reservations, setReservations] = useState([]);
@@ -37,7 +37,6 @@ export default function MyReservationPage() {
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.pageTitle}>내 예약 현황</h2>
       <MyReservationList reservations={reservations} />
     </div>
   );

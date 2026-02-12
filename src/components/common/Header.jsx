@@ -1,12 +1,16 @@
+// Header.jsx
 import { AuthContext } from "@/auth/AuthContext";
-import { showSuccess } from "@/lib/swal.js";
-import { useContext } from "react";
+import { showSuccess } from "@/lib/swal";
+import { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
 export default function Header({ onLoginClick }) {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const userBoxRef = useRef(null);
 
   const handleClickLogo = () => {
     navigate("/home");
@@ -18,12 +22,44 @@ export default function Header({ onLoginClick }) {
     }
   };
 
+  const handleToggleLogout = () => {
+    if (!user) return;
+    setIsLogoutOpen((prev) => !prev);
+  };
+
   const handleLogout = () => {
+    logout("manual");
     showSuccess("로그아웃 되었습니다.");
-    setUser(null);
-    localStorage.removeItem("accessToken");
+    setIsLogoutOpen(false);
     navigate("/home");
   };
+
+  const handleMoveMyReservationOrManager = () => {
+    if (!user) {
+      onLoginClick();
+      return;
+    }
+
+    if(user.role === 2){
+      navigate("/myreservations");
+    }
+
+    if(user.role === 1){
+      navigate("/manager")
+    }
+  };
+
+  // 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userBoxRef.current && !userBoxRef.current.contains(e.target)) {
+        setIsLogoutOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -32,39 +68,49 @@ export default function Header({ onLoginClick }) {
       </div>
 
       <nav className={styles.menu}>
-        <button onClick={handleLoginClick}>
-          <li>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="19"
-              viewBox="0 0 20 19"
-              fill="none"
-            >
-              <path
-                d="M19 18V18C19 14.4101 16.0899 11.5 12.5 11.5H7.5C3.91015 11.5 1 14.4101 1 18V18"
-                stroke="#29292D"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              ></path>
-              <circle
-                cx="10"
-                cy="5"
-                r="4"
-                stroke="#29292D"
-                strokeWidth="1.5"
-              ></circle>
-            </svg>
-            {user?.email || "로그인"}
-          </li>
-        </button>
-
-        {user && (
-          <button onClick={handleLogout}>
-            <li>로그아웃</li>
+        {/* 이메일 영역 */}
+        <div className={styles.userBox} ref={userBoxRef}>
+          <button
+            className={styles.userButton}
+            onClick={user ? handleToggleLogout : handleLoginClick}
+          >
+            <li>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="19"
+                viewBox="0 0 20 19"
+                fill="none"
+              >
+                <path
+                  d="M19 18V18C19 14.4101 16.0899 11.5 12.5 11.5H7.5C3.91015 11.5 1 14.4101 1 18V18"
+                  stroke="#29292D"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <circle
+                  cx="10"
+                  cy="5"
+                  r="4"
+                  stroke="#29292D"
+                  strokeWidth="1.5"
+                />
+              </svg>
+              {user?.email || "로그인"}
+            </li>
           </button>
-        )}
-        <button onClick={() => navigate("/myreservations")}>
+
+          {user && isLogoutOpen && (
+            <div className={styles.logoutDropdown}>
+              <button className={styles.logoutButton} onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* 내 예약 / 스토어 관리 */}
+        <button onClick={handleMoveMyReservationOrManager}>
           <li>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +123,7 @@ export default function Header({ onLoginClick }) {
                 d="M19.7729 9.04466C18.7255 9.53297 18.0449 10.5718 18.0449 11.9232C18.0449 13.2769 18.7281 14.2937 19.7756 14.7666C19.9383 14.84 20.0704 14.9376 20.1533 15.0347C20.2323 15.1271 20.2499 15.1965 20.2499 15.2463V17C20.2499 18.2426 19.2426 19.25 17.9999 19.25H6C4.75736 19.25 3.75 18.2426 3.75 16.9999V7C3.75 5.75736 4.75736 4.75 6 4.75H17.9999C19.2426 4.75 20.2499 5.75736 20.2499 7V8.55715C20.2499 8.60663 20.2324 8.67653 20.1527 8.7705C20.0692 8.86903 19.9365 8.96842 19.7729 9.04466Z"
                 stroke="#29292D"
                 strokeWidth="1.5"
-              ></path>
+              />
               <line
                 x1="14.75"
                 y1="5.75"
@@ -87,9 +133,9 @@ export default function Header({ onLoginClick }) {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeDasharray="1 3"
-              ></line>
+              />
             </svg>
-            내 예약
+            {!user || user?.role === 2 ? "내 예약" : "스토어 관리"}
           </li>
         </button>
       </nav>

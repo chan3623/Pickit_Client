@@ -131,9 +131,6 @@ const generateTimeSlots = (
 
 export default function Reservation({ data, onSubmitReservation }) {
   const { popup, dayInfos, reservations } = data;
-  console.log("popup : ", popup);
-  console.log("dayInfos : ", dayInfos);
-  console.log("reservations : ", reservations);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);

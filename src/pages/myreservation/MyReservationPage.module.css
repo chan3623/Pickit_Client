@@ -10,10 +10,3 @@
   overflow-y: auto;
   padding-top: 80px; /* header offset */
 }
-
-.pageTitle {
-  font-size: 1.8em;
-  font-weight: 600;
-  color: #25316D;
-  margin-bottom: 20px;
-}

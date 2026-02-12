@@ -1,5 +1,5 @@
 import { showError, showSuccess } from "@/lib/swal";
-import { registerAdmin, registerUser } from "@/services/auth.api";
+import { registerAdmin, registerUser } from "@/services/user.api";
 import { useState } from "react";
 import styles from "./LoginModal.module.css";
 

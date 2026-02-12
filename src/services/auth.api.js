@@ -1,14 +1,6 @@
 import api from "../lib/axios";
 
-export async function registerUser({ email, password }) {
-  return api.post("/user", { email, password });
-}
-
-export async function registerAdmin({ email, password }) {
-  return api.post("/user/admin", { email, password });
-}
-
-export async function login({ email, password }) {
+export async function login({ email, password, loginType }) {
   const token = btoa(`${email}:${password}`);
 
   return api.post(
@@ -17,6 +9,7 @@ export async function login({ email, password }) {
     {
       headers: {
         Authorization: `Basic ${token}`,
+        "X-Login-Type": loginType
       },
     },
   );
