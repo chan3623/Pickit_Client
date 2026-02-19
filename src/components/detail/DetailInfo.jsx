@@ -1,6 +1,6 @@
-import { AuthContext } from "@/auth/AuthContext";
-import LoginModal from "@/components/common/LoginModal";
-import SignupModal from "@/components/common/SignupModal";
+import { UserAuthContext } from "@/auth/user/UserAuthContext";
+import LoginModal from "@/components/common/login/LoginModal";
+import SignupModal from "@/components/common/signup/SignupModal";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import style from "./DetailInfo.module.css";
@@ -22,13 +22,13 @@ const formatPhoneNumber = (tel) => {
 };
 
 export default function DetailInfo({ data }) {
-  const { user } = useContext(AuthContext);
+  const { account } = useContext(UserAuthContext);
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
   const handleMoveReservation = async () => {
-    if (!user) {
+    if (!account) {
       setShowLoginModal(true);
       return;
     }

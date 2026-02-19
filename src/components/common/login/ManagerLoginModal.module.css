@@ -1,0 +1,204 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  position: relative;
+  width: 420px;
+  padding: 36px 32px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  animation: modalPop 0.35s cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: none;
+  background: none;
+  font-size: 26px;
+  color: #64748b;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.closeButton:hover {
+  transform: rotate(90deg);
+  color: #0f172a;
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 20px 0 30px 0;
+  color: #0f172a;
+}
+
+/* ===== Tabs ===== */
+
+.tabContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.tabButton {
+  border: none;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tabButton.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Form ===== */
+
+.formGroup {
+  margin-bottom: 18px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #0f172a;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12);
+}
+
+/* ===== Login Button (Black Theme) ===== */
+
+.loginButton {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s ease;
+}
+
+.loginButton:hover {
+  background: linear-gradient(135deg, #1e293b, #020617);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55);
+}
+
+.loginButton:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Switch ===== */
+
+.switchText {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.switchButton {
+  border: none;
+  background: none;
+  padding: 0;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.switchButton::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: #0f172a;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+
+.switchButton:hover {
+  color: #020617;
+}
+
+.switchButton:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}

@@ -1,12 +1,15 @@
-// AuthProvider.jsx
+// auth/user/UserAuthProvider.jsx
 import { showInfo } from "@/lib/swal";
 import { getUser } from "@/services/user.api";
 import { jwtDecode } from "jwt-decode";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { UserAuthContext } from "./UserAuthContext";
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+const ACCESS_TOKEN_KEY = "USER_ACCESS_TOKEN";
+const REFRESH_TOKEN_KEY = "USER_REFRESH_TOKEN";
+
+export default function UserAuthProvider({ children }) {
+  const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const logoutTimerRef = useRef(null);
 
@@ -19,10 +22,9 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback((reason = "manual") => {
     clearLogoutTimer();
-
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setUser(null);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    setAccount(null);
 
     if (reason === "expired") {
       showInfo("세션이 만료되었습니다. 다시 로그인해주세요.").then(() => {
@@ -44,62 +46,52 @@ export function AuthProvider({ children }) {
         return;
       }
 
-      logoutTimerRef.current = setTimeout(() => {
-        logout("expired");
-      }, timeout);
+      logoutTimerRef.current = setTimeout(() => logout("expired"), timeout);
     },
     [logout],
   );
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+
     if (!token) {
       setLoading(false);
       return;
     }
 
-    const initAuth = async () => {
+    (async () => {
       try {
         const decoded = jwtDecode(token);
-        const now = Date.now() / 1000;
 
-        if (decoded.exp <= now) {
+        if (decoded.exp <= Date.now() / 1000) {
           logout("expired");
           return;
         }
 
         scheduleLogout(token);
-
         const res = await getUser();
-        setUser(res.data);
-      } catch (err) {
+        setAccount(res.data);
+      } catch {
         logout("expired");
       } finally {
         setLoading(false);
       }
-    };
+    })();
 
-    initAuth();
-
-    return () => {
-      clearLogoutTimer();
-    };
+    return clearLogoutTimer;
   }, []);
 
-  useEffect(() => {
-    console.log("AuthProvider user 변경:", user);
-  }, [user]);
-
   return (
-    <AuthContext.Provider
+    <UserAuthContext.Provider
       value={{
-        user,
-        setUser,
+        account,
+        setAccount,
         logout,
         scheduleLogout,
+        loading,
       }}
     >
       {!loading && children}
-    </AuthContext.Provider>
+    </UserAuthContext.Provider>
   );
 }

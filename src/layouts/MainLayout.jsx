@@ -1,8 +1,9 @@
+import FloatingActions from "@/components/common/floating/FloatingActions";
+import Header from "@/components/common/header/Header";
+import LoginModal from "@/components/common/login/LoginModal";
+import SignupModal from "@/components/common/signup/SignupModal";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/common/Header";
-import LoginModal from "../components/common/LoginModal";
-import SignupModal from "../components/common/SignupModal";
 
 export default function MainLayout() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -23,6 +24,8 @@ export default function MainLayout() {
       <Header onLoginClick={openLogin} />
 
       <Outlet />
+
+      <FloatingActions />
 
       <LoginModal
         isOpen={isLoginModalOpen}

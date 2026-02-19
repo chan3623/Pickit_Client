@@ -1,12 +1,14 @@
+import ManagerAuthProvider from "@/auth/manager/ManagerAuthProvider";
+import UserAuthProvider from "@/auth/user/UserAuthProvider";
 import MainLayout from "@/layouts/MainLayout";
+import ManagerLayout from "@/layouts/ManagerLayout";
 import DetailPage from "@/pages/detail/DetailPage";
 import HomePage from "@/pages/home/HomePage";
-// import LoginPage from "@/pages/login/LoginPage";
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import ReservationPage from "@/pages/reservation/ReservationPage";
-import MyReservationPage from "@/pages/myreservation/MyReservationPage";
 import ManagerPage from "@/pages/manager/ManagerPage";
-import NewPopupPage from "@/pages/new/NewPopupPage"
+import MyReservationPage from "@/pages/myreservation/MyReservationPage";
+import NewPopupPage from "@/pages/new/NewPopupPage";
+import ReservationPage from "@/pages/reservation/ReservationPage";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +16,11 @@ export const router = createBrowserRouter([
     element: <Navigate to="/home" replace />,
   },
   {
-    element: <MainLayout />,
+    element: (
+      <UserAuthProvider>
+        <MainLayout />
+      </UserAuthProvider>
+    ),
     children: [
       {
         path: "/home",
@@ -32,14 +38,23 @@ export const router = createBrowserRouter([
         path: "/myreservations",
         element: <MyReservationPage />,
       },
+    ],
+  },
+  {
+    element: (
+      <ManagerAuthProvider>
+        <ManagerLayout />
+      </ManagerAuthProvider>
+    ),
+    children: [
       {
         path: "/manager",
-        element: <ManagerPage/>
+        element: <ManagerPage />,
       },
       {
         path: "/new",
-        element: <NewPopupPage/>
-      }
+        element: <NewPopupPage />,
+      },
     ],
   },
 ]);

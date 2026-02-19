@@ -1,22 +1,13 @@
+import styles from "@/components/common/login/ManagerLoginModal.module.css";
 import { showError, showSuccess } from "@/lib/swal";
-import { registerAdmin, registerUser } from "@/services/user.api";
+import { registerAdmin } from "@/services/user.api";
 import { useState } from "react";
-import styles from "./LoginModal.module.css";
 
 export default function SignupModal({ isOpen, onClose }) {
-  const [activeTab, setActiveTab] = useState("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   if (!isOpen) return null;
-
-  const handleTabChange = (tab) => {
-    if (tab === activeTab) return;
-
-    setActiveTab(tab);
-    setEmail("");
-    setPassword("");
-  };
 
   const handleClose = () => {
     setEmail("");
@@ -28,10 +19,7 @@ export default function SignupModal({ isOpen, onClose }) {
     const signupData = { email, password };
 
     try {
-      const response =
-        activeTab === "user"
-          ? await registerUser(signupData)
-          : await registerAdmin(signupData);
+      const response = await registerAdmin(signupData);
 
       if (response.status === 201) {
         showSuccess("정상적으로 회원가입 되었습니다.");
@@ -50,26 +38,6 @@ export default function SignupModal({ isOpen, onClose }) {
         </button>
 
         <h2 className={styles.title}>회원가입</h2>
-
-        <div className={styles.tabContainer}>
-          <button
-            className={`${styles.tabButton} ${
-              activeTab === "user" ? styles.active : ""
-            }`}
-            onClick={() => handleTabChange("user")}
-          >
-            일반
-          </button>
-
-          <button
-            className={`${styles.tabButton} ${
-              activeTab === "admin" ? styles.active : ""
-            }`}
-            onClick={() => handleTabChange("admin")}
-          >
-            관리자
-          </button>
-        </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="signup-email">이메일</label>

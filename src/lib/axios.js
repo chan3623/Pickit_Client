@@ -9,10 +9,22 @@ const api = axios.create({
 
 // 요청 인터셉터: 토큰 자동 첨부
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
+  const role = localStorage.getItem("LOGIN_ROLE");
+
+  let token = null;
+
+  if (role === "USER") {
+    token = localStorage.getItem("USER_ACCESS_TOKEN");
+  }
+
+  if (role === "MANAGER") {
+    token = localStorage.getItem("MANAGER_ACCESS_TOKEN");
+  }
+
   if (config.url !== "/auth/login" && token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 

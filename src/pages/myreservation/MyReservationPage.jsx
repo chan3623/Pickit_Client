@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import styles from "./MyReservationPage.module.css";
 import MyReservationList from "@/components/myreservation/MyReservationList";
 import { getUserReservations } from "@/services/popup.api";
+import { useEffect, useState } from "react";
+import styles from "./MyReservationPage.module.css";
 
 export default function MyReservationPage() {
   const [reservations, setReservations] = useState([]);
@@ -32,7 +32,11 @@ export default function MyReservationPage() {
   }
 
   if (error) {
-    return <div className={styles.page} style={{ color: "red" }}>{error}</div>;
+    return (
+      <div className={styles.page} style={{ color: "red" }}>
+        {error}
+      </div>
+    );
   }
 
   return (
