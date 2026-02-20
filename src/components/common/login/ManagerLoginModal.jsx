@@ -45,8 +45,6 @@ export default function ManagerLoginModal({ isOpen, onClose, onSignupClick }) {
 
       const userRes = await getUser();
       setAccount(userRes.data);
-
-      scheduleLogout(accessToken);
     } catch (e) {
       showError(e.customMessage || "로그인 실패");
       console.error("매니저 로그인 실패:", e);

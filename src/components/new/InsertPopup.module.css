@@ -1,3 +1,5 @@
+/* InsertPopup.module.css */
+
 .wrapper {
   max-width: 1115px;
   margin: 0 auto;
@@ -11,12 +13,10 @@
 .header h1 {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #020617;
 }
 
 .header p {
   margin-top: 6px;
-  font-size: 0.95rem;
   color: #64748b;
 }
 
@@ -39,7 +39,6 @@
 .field label {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #334155;
 }
 
 .field input,
@@ -47,18 +46,11 @@
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
-  font-size: 0.9rem;
 }
 
 .field textarea {
-  resize: none;
   height: 120px;
-}
-
-.field input:focus,
-.field textarea:focus {
-  outline: none;
-  border-color: #38bdf8;
+  resize: none;
 }
 
 .row {
@@ -71,53 +63,283 @@
   gap: 24px;
 }
 
-.toggleGroup label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #334155;
-}
+/* 포스터 메인 섹션 */
 
-.imageBox {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.preview {
-  margin-top: 10px;
-  width: 100%;
-  height: 240px;
-  border-radius: 16px;
-  overflow: hidden;
+.posterSection {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 32px;
+  padding: 24px;
+  border-radius: 18px;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
 }
 
-.preview img {
+.hiddenFile {
+  display: none;
+}
+
+.posterPreview {
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+}
+
+.posterPreview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
+}
+
+.posterPlaceholder {
+  width: 100%;
+  height: 100%;
+  color: #cbd5f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.posterPlaceholder strong {
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+
+.posterPlaceholder span {
+  font-size: 0.9rem;
+}
+
+.posterPlaceholder em {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.posterPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.posterPanel h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.posterDesc {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.selectBtn {
+  width: fit-content;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: #020617;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fileLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.fileName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #020617;
+}
+
+.guideList {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #64748b;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
 }
 
 .actions button {
-  padding: 10px 20px;
-  border-radius: 12px;
+  padding: 12px 26px;
+  border-radius: 14px;
   border: none;
-  font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
+  background: #020617;
+  color: white;
   cursor: pointer;
-  background: #000;
+}
+
+/* 옵션 섹션 */
+
+.optionSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.optionHeader h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #020617;
+}
+
+.optionHeader p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* 옵션 카드 */
+
+.optionGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.optionCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.optionCard input {
+  display: none;
+}
+
+.optionCard:hover {
+  border-color: #94a3b8;
+}
+
+.optionCard.active {
+  background: #020617;
+  border-color: #020617;
+}
+
+.optionCard.active strong,
+.optionCard.active span {
   color: #ffffff;
 }
 
-.actions button:hover {
-  background: #0284c7;
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.optionText strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #020617;
+}
+
+.optionText span {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.onText {
+  font-size: 0.8rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.offText {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* 기존 optionText 유지 */
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ===============================
+   주소 검색 레이어 (추가)
+=============================== */
+
+.addressRow {
+  display: flex;
+  gap: 10px;
+}
+
+.addressRow input {
+  flex: 1;
+  background: #f8fafc;
+}
+
+.addressRow button {
+  padding: 0 18px;
+  border-radius: 10px;
+  border: none;
+  background: #020617;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.addressOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+}
+
+.addressLayer {
+  width: 520px;
+  height: 620px;
+  background: #ffffff;
+  border-radius: 18px;
+  margin: 80px auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.addressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.addressHeader strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.addressHeader button {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.addressContent {
+  flex: 1;
 }

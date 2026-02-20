@@ -12,7 +12,6 @@ export async function getRandomPopups() {
   return res;
 }
 
-
 // detail api
 
 export async function getPopupDetail(popupId) {
@@ -41,6 +40,14 @@ export async function postPopupReservation(reservationPayload) {
 // manager
 
 export async function getManagerPopups() {
-  const res = await api.get('/popup/manager');
+  const res = await api.get("/popup/manager");
+  return res;
+}
+
+// popup create
+
+export async function postNewPopup(formData) {
+  const res = await api.post("/popup", formData);
+
   return res;
 }

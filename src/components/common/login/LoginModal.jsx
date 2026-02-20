@@ -41,9 +41,6 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
       localStorage.removeItem("MANAGER_ACCESS_TOKEN");
       localStorage.removeItem("MANAGER_REFRESH_TOKEN");
 
-      // ✅ 타이머 먼저 설정
-      scheduleLogout(accessToken);
-
       // ✅ 사용자 정보 세팅
       const userRes = await getUser();
       setAccount(userRes.data);
