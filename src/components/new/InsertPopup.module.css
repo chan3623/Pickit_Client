@@ -220,7 +220,7 @@
   padding: 16px 18px;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
-  background: #f8fafc;
+  background: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -234,13 +234,16 @@
 }
 
 .optionCard.active {
-  background: #020617;
-  border-color: #020617;
+  /* background: #020617;
+  border-color: #020617; */
+
+  border: 1px solid #94a3b8;
+  background-color: #f8fafc;
 }
 
 .optionCard.active strong,
 .optionCard.active span {
-  color: #ffffff;
+  color: #020617;
 }
 
 .optionText {
@@ -257,18 +260,20 @@
 
 .optionText span {
   font-size: 0.8rem;
-  color: #64748b;
+  /* color: #64748b; */
 }
 
 .onText {
   font-size: 0.8rem;
-  color: #ffffff;
-  font-weight: 700;
+  /* color: #ffffff; */
+  color: #020617;
+  /* font-weight: 700; */
 }
 
 .offText {
   font-size: 0.8rem;
-  color: #64748b;
+  /* color: #64748b; */
+  color: #020617;
 }
 
 /* 기존 optionText 유지 */
@@ -342,4 +347,86 @@
 
 .addressContent {
   flex: 1;
+}
+
+/* 요일별 운영 시간 */
+
+.scheduleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.scheduleRow {
+  display: grid;
+  grid-template-columns: 140px 130px 20px 130px 100px 70px;
+  gap: 10px;
+  align-items: center;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scheduleRow:hover {
+  border-color: #94a3b8;
+}
+
+.scheduleRow.active {
+  /* background: #020617; */
+  /* border-color: #020617; */
+  border: 1px solid #94a3b8;
+  background-color: #f8fafc;
+}
+
+.scheduleRow.active strong,
+.scheduleRow.active span {
+  /* color: #ffffff; */
+}
+
+/* 요일 텍스트 */
+.dayInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dayInfo strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.dayInfo span {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* 시간 / 텀 */
+.scheduleRow input[type="time"],
+.scheduleRow input[type="number"],
+.scheduleRow select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+}
+
+.scheduleRow input:disabled,
+.scheduleRow select:disabled {
+  background: #e5e7eb;
+  color: #94a3b8;
+}
+
+.scheduleRow.active input,
+.scheduleRow.active select {
+  background: #ffffff;
+  color: #020617;
+}
+
+.wave {
+  text-align: center;
+  font-weight: 700;
+  color: #64748b;
 }

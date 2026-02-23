@@ -1,5 +1,8 @@
-import styles from "./ManagerList.module.css";
+// ManagerList.jsx
+
+import { useNavigate } from "react-router-dom";
 import { ENV } from "../../config/env";
+import styles from "./ManagerList.module.css";
 
 const formatDate = (dateString) => {
   const d = new Date(dateString);
@@ -14,6 +17,16 @@ const isActivePopup = (startDate, endDate) => {
 };
 
 export default function ManagerList({ popups }) {
+  const navigate = useNavigate();
+
+  const handleMovieEdit = (popupId) => {
+    navigate("/edit", {
+      state: {
+        popupId,
+      },
+    });
+  };
+
   if (!popups || popups.length === 0) {
     return (
       <div className={styles.empty}>
@@ -52,7 +65,14 @@ export default function ManagerList({ popups }) {
 
             <div className={styles.actions}>
               <button className={styles.manage}>예약관리</button>
-              <button className={styles.edit}>수정</button>
+              <button
+                className={styles.edit}
+                onClick={() => {
+                  handleMovieEdit(popup.id);
+                }}
+              >
+                수정
+              </button>
               <button className={styles.delete}>삭제</button>
             </div>
           </div>

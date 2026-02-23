@@ -3,6 +3,7 @@ import UserAuthProvider from "@/auth/user/UserAuthProvider";
 import MainLayout from "@/layouts/MainLayout";
 import ManagerLayout from "@/layouts/ManagerLayout";
 import DetailPage from "@/pages/detail/DetailPage";
+import EditPopupPage from "@/pages/edit/EditPopupPage";
 import HomePage from "@/pages/home/HomePage";
 import ManagerPage from "@/pages/manager/ManagerPage";
 import MyReservationPage from "@/pages/myreservation/MyReservationPage";
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "/new",
         element: <NewPopupPage />,
+      },
+      {
+        path: "/edit",
+        element: <EditPopupPage />,
       },
     ],
   },

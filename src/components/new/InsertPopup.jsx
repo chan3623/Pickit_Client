@@ -2,6 +2,18 @@ import { postNewPopup } from "@/services/popup.api.js";
 import { useEffect, useRef, useState } from "react";
 import styles from "./InsertPopup.module.css";
 
+const DAYS = [
+  { key: 1, label: "월요일" },
+  { key: 2, label: "화요일" },
+  { key: 3, label: "수요일" },
+  { key: 4, label: "목요일" },
+  { key: 5, label: "금요일" },
+  { key: 6, label: "토요일" },
+  { key: 7, label: "일요일" },
+];
+
+const INTERVAL_OPTIONS = [30, 60, 90, 120];
+
 export default function InsertPopup() {
   const fileRef = useRef(null);
   const addressContainerRef = useRef(null);
@@ -20,6 +32,18 @@ export default function InsertPopup() {
     isFree: false,
     image: null,
   });
+
+  const [days, setDays] = useState(
+    DAYS.map((day) => ({
+      day: day.key,
+      label: day.label,
+      isOpen: false,
+      openTime: "10:00",
+      closeTime: "20:00",
+      slotMinute: 30,
+      slot: 0,
+    })),
+  );
 
   const [preview, setPreview] = useState(null);
 
@@ -69,6 +93,25 @@ export default function InsertPopup() {
     setPreview(URL.createObjectURL(file));
   };
 
+  const updateSchedule = (index, patch) => {
+    setDays((prev) =>
+      prev.map((item, idx) =>
+        idx === index
+          ? {
+              ...item,
+              ...patch,
+            }
+          : item,
+      ),
+    );
+  };
+
+  const toggleDay = (index) => {
+    updateSchedule(index, {
+      isOpen: !days[index].isOpen,
+    });
+  };
+
   const createPopup = async () => {
     const formData = new FormData();
 
@@ -84,9 +127,21 @@ export default function InsertPopup() {
     formData.append("isFree", data.isFree);
     formData.append("image", data.image);
 
-    const response = await postNewPopup(formData);
+    const dayInfos = days
+      .filter((item) => item.isOpen)
+      .map((day) => {
+        return {
+          openTime: day.openTime,
+          closeTime: day.closeTime,
+          slotMinute: Number(day.slotMinute),
+          capacityPerSlot: Number(day.slot),
+          dayOfWeek: Number(day.day),
+        };
+      });
 
-    console.log("response : ", response);
+    formData.append("dayInfos", JSON.stringify(dayInfos));
+
+    await postNewPopup(formData);
   };
 
   return (
@@ -184,9 +239,9 @@ export default function InsertPopup() {
               <div className={styles.optionText}>
                 <strong>주차</strong>
                 {data.park ? (
-                  <span className={styles.onText}>주차 공간 없음</span>
+                  <span className={styles.onText}>주차 이용 가능</span>
                 ) : (
-                  <span className={styles.offText}>주차 이용 가능</span>
+                  <span className={styles.offText}>주차 이용 불가</span>
                 )}
               </div>
             </label>
@@ -205,13 +260,85 @@ export default function InsertPopup() {
               <div className={styles.optionText}>
                 <strong>입장료</strong>
                 {data.isFree ? (
-                  <span className={styles.onText}>유료 입장</span>
+                  <span className={styles.onText}>무료 입장</span>
                 ) : (
-                  <span className={styles.offText}>무료 입장</span>
+                  <span className={styles.offText}>유료 입장</span>
                 )}
               </div>
             </label>
           </div>
+        </div>
+
+        <div className={styles.scheduleSection}>
+          <div className={styles.optionHeader}>
+            <h3>요일별 운영 시간</h3>
+            <p>요일 카드를 클릭해 운영 여부를 설정하세요.</p>
+          </div>
+
+          {days.map((day, idx) => (
+            <div
+              key={day.day}
+              className={`${styles.scheduleRow} ${
+                day.isOpen ? styles.active : ""
+              }`}
+              onClick={() => toggleDay(idx)}
+            >
+              {/* 요일 표시 */}
+              <div className={styles.dayInfo}>
+                <strong>{day.label}</strong>
+                <span>{day.isOpen ? "운영" : "휴무"}</span>
+              </div>
+
+              {/* 시간 */}
+              <input
+                type="time"
+                disabled={!day.isOpen}
+                value={day.openTime}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) =>
+                  updateSchedule(idx, { openTime: e.target.value })
+                }
+              />
+
+              <span className={styles.wave}>~</span>
+
+              <input
+                type="time"
+                disabled={!day.isOpen}
+                value={day.closeTime}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) =>
+                  updateSchedule(idx, { closeTime: e.target.value })
+                }
+              />
+
+              {/* 텀 */}
+              <select
+                disabled={!day.isOpen}
+                value={day.slotMinute}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) =>
+                  updateSchedule(idx, {
+                    slotMinute: Number(e.target.value),
+                  })
+                }
+              >
+                {INTERVAL_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}분
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="number"
+                disabled={!day.isOpen}
+                value={day.slot}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => updateSchedule(idx, { slot: e.target.value })}
+              />
+            </div>
+          ))}
         </div>
 
         <div className={styles.posterSection}>

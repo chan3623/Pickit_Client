@@ -1,11 +1,10 @@
-import styles from "./NewPopupPage.module.css";
 import InsertPopup from "@/components/new/InsertPopup";
-import { ENV } from "@/config/env";
+import styles from "./NewPopupPage.module.css";
 
 export default function PopupCreatePage() {
   return (
     <div className={styles.page}>
-      <InsertPopup/>
+      <InsertPopup />
     </div>
-  )
+  );
 }
