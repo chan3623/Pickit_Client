@@ -12,7 +12,7 @@ const REFRESH_TOKEN_KEY = "USER_REFRESH_TOKEN";
 export default function LoginModal({ isOpen, onClose, onSignupClick }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setAccount, scheduleLogout } = useUserAuth();
+  const { setAccount } = useUserAuth();
 
   if (!isOpen) return null;
 

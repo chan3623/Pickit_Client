@@ -51,3 +51,11 @@ export async function postNewPopup(formData) {
 
   return res;
 }
+
+// popup update
+
+export async function updatePopup(popupId, formData) {
+  const res = await api.patch(`/popup/${popupId}`, formData);
+
+  return res;
+}

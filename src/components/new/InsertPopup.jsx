@@ -1,5 +1,7 @@
+import { showError, showSuccess } from "@/lib/swal";
 import { postNewPopup } from "@/services/popup.api.js";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./InsertPopup.module.css";
 
 const DAYS = [
@@ -46,6 +48,8 @@ export default function InsertPopup() {
   );
 
   const [preview, setPreview] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (document.getElementById("daum-postcode-script")) return;
@@ -115,12 +119,11 @@ export default function InsertPopup() {
   const createPopup = async () => {
     const formData = new FormData();
 
-    const address = `${data.address} ${data.detailAddress}`;
-
     formData.append("title", data.title);
     formData.append("startDate", data.startDate);
     formData.append("endDate", data.endDate);
-    formData.append("address", address);
+    formData.append("address", data.address);
+    formData.append("detailAddress", data.detailAddress);
     formData.append("description", data.description);
     formData.append("tel", data.tel);
     formData.append("park", data.park);
@@ -141,7 +144,19 @@ export default function InsertPopup() {
 
     formData.append("dayInfos", JSON.stringify(dayInfos));
 
-    await postNewPopup(formData);
+    try {
+      const res = await postNewPopup(formData);
+
+      if (res.status === 201) {
+        showSuccess("팝업스토어가 등록되었습니다.");
+      } else {
+        showError("팝업스토어 등록에 실패했습니다.");
+      }
+      navigate("/manager");
+    } catch (e) {
+      showError(e.customMessage);
+      navigate("/manager");
+    }
   };
 
   return (

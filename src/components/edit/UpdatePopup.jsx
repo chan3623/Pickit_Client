@@ -1,9 +1,12 @@
 // UpdatePopup.jsx
 
-import { postNewPopup } from "@/services/popup.api.js";
+import { showError, showSuccess } from "@/lib/swal";
+import { updatePopup } from "@/services/popup.api.js";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ENV } from "../../config/env";
 import styles from "./UpdatePopup.module.css";
+
 const DAYS = [
   { key: 1, label: "월요일" },
   { key: 2, label: "화요일" },
@@ -19,6 +22,7 @@ const INTERVAL_OPTIONS = [30, 60, 90, 120];
 export default function UpdatePopup({ popupData }) {
   const { popup, dayOfInfo } = popupData;
 
+  const navigate = useNavigate();
   /* =========================
      조회 데이터 → 폼 매핑
   ========================== */
@@ -38,6 +42,7 @@ export default function UpdatePopup({ popupData }) {
   const [isAddressOpen, setIsAddressOpen] = useState(false);
 
   const [data, setData] = useState({
+    id: popup.id,
     title: popup.title,
     startDate: formatDate(popup.startDate),
     endDate: formatDate(popup.endDate),
@@ -56,6 +61,7 @@ export default function UpdatePopup({ popupData }) {
 
       if (!match) {
         return {
+          id: day.id,
           day: day.key,
           label: day.label,
           isOpen: false,
@@ -142,11 +148,12 @@ export default function UpdatePopup({ popupData }) {
     });
   };
 
-  const updatePopup = async () => {
+  const editPopup = async () => {
     const formData = new FormData();
 
     const address = `${data.address} ${data.detailAddress}`;
 
+    formData.append("id", data.id);
     formData.append("title", data.title);
     formData.append("startDate", data.startDate);
     formData.append("endDate", data.endDate);
@@ -169,7 +176,19 @@ export default function UpdatePopup({ popupData }) {
 
     formData.append("dayInfos", JSON.stringify(dayInfos));
 
-    await postNewPopup(formData);
+    try {
+      const res = await updatePopup(popup.id, formData);
+
+      if (res.status === 200) {
+        showSuccess("팝업스토어가 수정되었습니다.");
+      } else {
+        showError("팝업스토어 수정에 실패했습니다.");
+      }
+      navigate("/manager");
+    } catch (e) {
+      showError(e.customMessage);
+      navigate("/manager");
+    }
   };
 
   return (
@@ -423,7 +442,7 @@ export default function UpdatePopup({ popupData }) {
         </div>
 
         <div className={styles.actions}>
-          <button onClick={updatePopup}>수정하기</button>
+          <button onClick={editPopup}>수정하기</button>
         </div>
       </section>
 
