@@ -54,8 +54,22 @@ export async function postNewPopup(formData) {
 
 // popup update
 
-export async function updatePopup(popupId, formData) {
-  const res = await api.patch(`/popup/${popupId}`, formData);
+export async function updatePopup(formData) {
+  const res = await api.patch(`/popup`, formData);
+
+  return res;
+}
+
+// popup status update
+
+export async function earlyClosePopup(data) {
+  const res = await api.patch("/popup/early-close", data);
+
+  return res;
+}
+
+export async function cancelUserReservation(data) {
+  const res = await api.patch("/popup/cancel-user", data);
 
   return res;
 }

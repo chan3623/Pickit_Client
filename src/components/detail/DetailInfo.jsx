@@ -45,6 +45,8 @@ export default function DetailInfo({ data }) {
     setShowSignupModal(true);
   };
 
+  const isDisabled = data.status !== "ACTIVE";
+
   return (
     <div className={style.detailBox}>
       <div className={style.titleInnerBox}>
@@ -58,8 +60,16 @@ export default function DetailInfo({ data }) {
 
       <div className={style.textBox}>{data.description}</div>
 
-      <button className={style.moveBtn} onClick={handleMoveReservation}>
-        예약하러 가기
+      <button
+        className={style.moveBtn}
+        disabled={isDisabled}
+        onClick={handleMoveReservation}
+      >
+        {data.status === "ACTIVE"
+          ? "예약하러 가기"
+          : data.status === "EARLY_CLOSED"
+            ? "해당 팝업스토어의 예약이 조기마감 되었습니다"
+            : "해당 팝업스토어는 운영이 취소 되었습니다"}
       </button>
       <LoginModal
         isOpen={showLoginModal}

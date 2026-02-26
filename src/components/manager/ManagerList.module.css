@@ -91,6 +91,12 @@
   border: none;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .manage {
@@ -103,7 +109,12 @@
   color: #0369a1;
 }
 
-.delete {
+.earlyClose {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.cancel {
   background: #fee2e2;
   color: #b91c1c;
 }
@@ -114,7 +125,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* text-align: center; */
   padding: 100px 0;
   color: #64748b;
 }

@@ -7,6 +7,12 @@
     padding: 0 0 30px 0;
 }
 
+.detailBox button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    /* background-color: #ccc; */
+}
+
 .titleInnerBox {
     width: 100%;
 

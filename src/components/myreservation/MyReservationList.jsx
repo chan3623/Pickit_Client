@@ -1,4 +1,6 @@
 import { ENV } from "@/config/env";
+import { showWarning } from "@/lib/swal";
+import { cancelUserReservation } from "@/services/popup.api.js";
 import { formatKoreanDateTime } from "@/utils/date";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyReservationList.module.css";
@@ -14,50 +16,20 @@ const formatPhoneNumber = (tel) => {
   return tel;
 };
 
-// 현재 예약인지 이전 예약인지 판단
-const isPastReservation = (dateStr, timeStr) => {
-  if (!dateStr || !timeStr) return false;
-
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const [hour, minute, second] = timeStr.split(":").map(Number);
-
-  const reservationDateTime = new Date(
-    year,
-    month - 1,
-    day,
-    hour,
-    minute,
-    second,
-  );
-
-  return new Date() > reservationDateTime;
-};
-
-// D-day 계산
-const getDDay = (dateStr, timeStr) => {
-  if (!dateStr || !timeStr) return null;
-
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const [hour, minute, second] = timeStr.split(":").map(Number);
-
-  const reservationDate = new Date(year, month - 1, day, hour, minute, second);
-
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const reservationStart = new Date(
-    reservationDate.getFullYear(),
-    reservationDate.getMonth(),
-    reservationDate.getDate(),
-  );
-
-  const diffTime = reservationStart.getTime() - todayStart.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return null;
-  if (diffDays === 0) return { text: "D-Day", isWarning: true };
-  if (diffDays <= 3) return { text: `D-${diffDays}`, isWarning: true };
-
-  return { text: `D-${diffDays}`, isWarning: false };
+// 상태 텍스트 변환
+const getStatusLabel = (status) => {
+  switch (status) {
+    case "RESERVED":
+      return { text: "예약 완료", color: "#00796b", bg: "#e0f7fa" };
+    case "COMPLETED":
+      return { text: "방문 완료", color: "#424242", bg: "#eeeeee" };
+    case "CANCELED_BY_USER":
+      return { text: "예약 취소", color: "#c62828", bg: "#fcdada" };
+    case "CANCELED_BY_POPUP":
+      return { text: "팝업 취소", color: "#c62828", bg: "#fcdada" };
+    default:
+      return { text: "알 수 없음", color: "#555", bg: "#eee" };
+  }
 };
 
 export default function MyReservationList({ reservations }) {
@@ -67,25 +39,27 @@ export default function MyReservationList({ reservations }) {
     return <p className={styles.noReservations}>예약 내역이 없습니다.</p>;
   }
 
-  const currentReservations = reservations.filter(
-    (r) => !isPastReservation(r.reservationDate, r.reservationTime),
-  );
-  const pastReservations = reservations.filter((r) =>
-    isPastReservation(r.reservationDate, r.reservationTime),
-  );
+  const handleCancel = async (e, reservationId) => {
+    e.stopPropagation();
 
-  const renderReservationCard = (reservation, isCurrent) => {
-    const dDay = isCurrent
-      ? getDDay(reservation.reservationDate, reservation.reservationTime)
-      : null;
+    const isConfirm = await showWarning("정말 예약을 취소하시겠습니까?");
+    if (!isConfirm) return;
+
+    const updateData = {
+      id: reservationId,
+      status: "CANCELED_BY_USER",
+    };
+
+    await cancelUserReservation(updateData);
+    window.location.reload();
+  };
+
+  const renderReservationCard = (reservation) => {
+    const statusInfo = getStatusLabel(reservation.status);
 
     return (
       <div
-        key={
-          reservation.popupId +
-          reservation.reservationDate +
-          reservation.reservationTime
-        }
+        key={reservation.id}
         className={styles.reservationCard}
         onClick={() => navigate(`/detail/${reservation.popupId}`)}
       >
@@ -122,16 +96,25 @@ export default function MyReservationList({ reservations }) {
           </p>
         </div>
 
-        {dDay && (
-          <span
-            className={styles.dDayBadge}
-            style={{
-              backgroundColor: dDay.isWarning ? "#fcdada" : "#e0f7fa",
-              color: dDay.isWarning ? "#c62828" : "#00796b",
-            }}
+        {/* 상태 배지 */}
+        <span
+          className={styles.statusBadge}
+          style={{
+            backgroundColor: statusInfo.bg,
+            color: statusInfo.color,
+          }}
+        >
+          {statusInfo.text}
+        </span>
+
+        {/* 예약 상태일 때만 취소 버튼 노출 */}
+        {reservation.status === "RESERVED" && (
+          <button
+            className={styles.cancelButton}
+            onClick={(e) => handleCancel(e, reservation.id)}
           >
-            {dDay.text}
-          </span>
+            예약 취소
+          </button>
         )}
       </div>
     );
@@ -139,19 +122,8 @@ export default function MyReservationList({ reservations }) {
 
   return (
     <div className={styles.reservationListContainer}>
-      {currentReservations.length > 0 && (
-        <>
-          <h2 className={styles.sectionHeader}>예약 내역</h2>
-          {currentReservations.map((r) => renderReservationCard(r, true))}
-        </>
-      )}
-
-      {pastReservations.length > 0 && (
-        <>
-          <h2 className={styles.sectionHeader}>이전 내역</h2>
-          {pastReservations.map((r) => renderReservationCard(r, false))}
-        </>
-      )}
+      <h2 className={styles.sectionHeader}>예약 내역</h2>
+      {reservations.map((r) => renderReservationCard(r))}
     </div>
   );
 }

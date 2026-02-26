@@ -47,7 +47,7 @@ export default function UpdatePopup({ popupData }) {
     startDate: formatDate(popup.startDate),
     endDate: formatDate(popup.endDate),
     address: popup.address,
-    detailAddress: "",
+    detailAddress: popup.detailAddress,
     description: popup.description,
     tel: popup.tel,
     park: popup.park,
@@ -177,7 +177,7 @@ export default function UpdatePopup({ popupData }) {
     formData.append("dayInfos", JSON.stringify(dayInfos));
 
     try {
-      const res = await updatePopup(popup.id, formData);
+      const res = await updatePopup(formData);
 
       if (res.status === 200) {
         showSuccess("팝업스토어가 수정되었습니다.");
