@@ -68,6 +68,12 @@ export async function earlyClosePopup(data) {
   return res;
 }
 
+export async function cancelPopup(data) {
+  const res = await api.patch("/popup/cancel", data);
+
+  return res;
+}
+
 export async function cancelUserReservation(data) {
   const res = await api.patch("/popup/cancel-user", data);
 

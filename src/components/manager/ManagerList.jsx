@@ -1,7 +1,7 @@
 import { ENV } from "@/config/env";
-import { showWarning } from "@/lib/swal";
+import { showError, showSuccess, showWarning } from "@/lib/swal";
 import { useNavigate } from "react-router-dom";
-import { earlyClosePopup } from "../../services/popup.api";
+import { cancelPopup, earlyClosePopup } from "../../services/popup.api";
 import styles from "./ManagerList.module.css";
 
 const formatDate = (dateString) => {
@@ -16,7 +16,7 @@ const isActivePopup = (startDate, endDate) => {
   return new Date(startDate) <= today && today <= new Date(endDate);
 };
 
-export default function ManagerList({ popups }) {
+export default function ManagerList({ popups, onStatusChange }) {
   const navigate = useNavigate();
 
   const handleEdit = (popupId) => {
@@ -35,22 +35,51 @@ export default function ManagerList({ popups }) {
       status: "EARLY_CLOSED",
     };
 
-    const response = await earlyClosePopup(updateData);
+    try {
+      const response = await earlyClosePopup(updateData);
 
-    console.log("response : ", response);
-    // TODO: API 호출
-    // await earlyClosePopup(popupId);
+      if (response.status === 200) {
+        onStatusChange(popupId, "EARLY_CLOSED");
+        showSuccess("팝업스토어가 조기 종료되었습니다.");
+      }
+    } catch (e) {
+      showError("문제가 발생되었습니다.");
+      console.log(e);
+    }
   };
 
   const handleCancel = async (popupId) => {
+    const nowDate = new Date();
+
+    const year = nowDate.getFullYear();
+    const month = String(nowDate.getMonth() + 1).padStart(2, "0");
+    const date = String(nowDate.getDate()).padStart(2, "0");
+    const hour = String(nowDate.getHours()).padStart(2, "0");
+    const minute = String(nowDate.getMinutes()).padStart(2, "0");
+
     const ok = await showWarning(
       "",
       "운영 취소 시 모든 예약이 강제 취소됩니다.\n정말 운영을 취소하시겠습니까?",
     );
     if (!ok) return;
 
-    // TODO: API 호출
-    // await cancelPopup(popupId);
+    const updateData = {
+      id: popupId,
+      status: "CANCELED",
+      date: `${year}-${month}-${date}`,
+      time: `${hour}:${minute}:00`,
+    };
+
+    try {
+      const response = await cancelPopup(updateData);
+      if (response.status === 200) {
+        onStatusChange(popupId, "CANCELED");
+        showSuccess("팝업스토어 운영이 취소되었습니다.");
+      }
+    } catch (e) {
+      showError("문제가 발생되었습니다.");
+      console.log(e);
+    }
   };
 
   if (!popups || popups.length === 0) {

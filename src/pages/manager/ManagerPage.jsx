@@ -21,14 +21,26 @@ export default function PopupAdminPage() {
         setPopups([]);
         return;
       }
+
       const res = await getManagerPopups();
 
       if (res.status === 200) {
         setPopups(res.data);
+      } else {
+        setPopups([]);
       }
     };
+
     fetchPopups();
   }, [account]);
+
+  const updatePopupStatus = (popupId, status) => {
+    setPopups((prev) =>
+      prev.map((popup) =>
+        popup.id === popupId ? { ...popup, status } : popup,
+      ),
+    );
+  };
 
   const handleMoveInsert = () => {
     if (!account) {
@@ -52,7 +64,7 @@ export default function PopupAdminPage() {
         </button>
       </div>
 
-      <ManagerList popups={popups} />
+      <ManagerList popups={popups} onStatusChange={updatePopupStatus} />
       <ManagerLoginModal
         isOpen={showManagerLoginModal}
         onClose={() => setShowManagerLoginModal(false)}
