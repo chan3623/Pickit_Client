@@ -44,6 +44,14 @@ export async function getManagerPopups() {
   return res;
 }
 
+export async function getReservationManage(popupId, filters = {}) {
+  const res = await api.get(`/popup/reservationManage/${popupId}`, {
+    params: filters,
+  });
+
+  return res;
+}
+
 // popup create
 
 export async function postNewPopup(formData) {

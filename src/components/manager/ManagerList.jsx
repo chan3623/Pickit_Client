@@ -23,6 +23,10 @@ export default function ManagerList({ popups, onStatusChange }) {
     navigate("/edit", { state: { popupId } });
   };
 
+  const handleReservationManage = (popupId) => {
+    navigate("/reservationManage", { state: { popupId } });
+  };
+
   const handleEarlyClose = async (popupId) => {
     const ok = await showWarning(
       "",
@@ -126,7 +130,12 @@ export default function ManagerList({ popups, onStatusChange }) {
             </div>
 
             <div className={styles.actions}>
-              <button className={styles.manage}>예약관리</button>
+              <button
+                className={styles.manage}
+                onClick={() => handleReservationManage(popup.id)}
+              >
+                예약관리
+              </button>
 
               <button
                 className={styles.edit}
