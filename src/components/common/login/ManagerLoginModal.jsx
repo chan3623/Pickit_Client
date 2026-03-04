@@ -38,8 +38,8 @@ export default function ManagerLoginModal({ isOpen, onClose, onSignupClick }) {
       localStorage.setItem("LOGIN_ROLE", "MANAGER");
 
       // 유저 토큰 제거
-      localStorage.removeItem("USER_ACCESS_TOKEN");
-      localStorage.removeItem("USER_REFRESH_TOKEN");
+      // localStorage.removeItem("USER_ACCESS_TOKEN");
+      // localStorage.removeItem("USER_REFRESH_TOKEN");
 
       showSuccess("로그인 성공");
 

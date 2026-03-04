@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ManagerHeader.module.css";
 
 export default function ManagerHeader({ onLoginClick }) {
-  const { account, logout } = useContext(ManagerAuthContext);
+  const { account, handleLogout } = useContext(ManagerAuthContext);
   const navigate = useNavigate();
 
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
@@ -27,8 +27,8 @@ export default function ManagerHeader({ onLoginClick }) {
     setIsLogoutOpen((prev) => !prev);
   };
 
-  const handleLogout = () => {
-    logout("manual");
+  const handleClickLogout = () => {
+    handleLogout("manual");
     showSuccess("로그아웃 되었습니다.");
     setIsLogoutOpen(false);
     navigate("/manager");
@@ -87,7 +87,10 @@ export default function ManagerHeader({ onLoginClick }) {
 
           {account && isLogoutOpen && (
             <div className={styles.logoutDropdown}>
-              <button className={styles.logoutButton} onClick={handleLogout}>
+              <button
+                className={styles.logoutButton}
+                onClick={handleClickLogout}
+              >
                 로그아웃
               </button>
             </div>

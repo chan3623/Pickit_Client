@@ -23,7 +23,6 @@ export default function ReservationManagePage() {
       const response = await getReservationManage(popupId, filters);
 
       if (response.status === 200) {
-        console.log("response.data : ", response.data);
         setData(response.data);
       } else {
         setData([]);

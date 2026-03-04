@@ -9,8 +9,14 @@ export async function login({ email, password, loginType }) {
     {
       headers: {
         Authorization: `Basic ${token}`,
-        "X-Login-Type": loginType
+        "X-Login-Type": loginType,
       },
     },
   );
+}
+
+export async function logout() {
+  const res = await api.post("/auth/logout");
+
+  return res;
 }

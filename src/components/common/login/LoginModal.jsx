@@ -38,14 +38,17 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
       localStorage.setItem("LOGIN_ROLE", "USER");
 
       // 관리자 토큰 제거
-      localStorage.removeItem("MANAGER_ACCESS_TOKEN");
-      localStorage.removeItem("MANAGER_REFRESH_TOKEN");
+      // localStorage.removeItem("MANAGER_ACCESS_TOKEN");
+      // localStorage.removeItem("MANAGER_REFRESH_TOKEN");
 
       // ✅ 사용자 정보 세팅
       const userRes = await getUser();
-      setAccount(userRes.data);
-
-      showSuccess("로그인 성공");
+      if (userRes && userRes.data) {
+        setAccount(userRes.data);
+        showSuccess("로그인 성공");
+      } else {
+        showError("로그인 도중 문제가 발생했습니다.");
+      }
       handleClose();
     } catch (e) {
       showError(e.customMessage || "로그인 실패");
