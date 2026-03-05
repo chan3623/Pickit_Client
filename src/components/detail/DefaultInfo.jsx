@@ -1,5 +1,5 @@
+import { ENV } from "@/config/env.js";
 import style from "./DefaultInfo.module.css";
-
 const DAY_MAP = {
   1: "월",
   2: "화",
@@ -53,7 +53,7 @@ export default function DefaultInfo({ data }) {
         <div className={style.imageBox}>
           <img
             className={style.image}
-            src={`http://localhost:3000${popup.imagePath}`}
+            src={`${ENV.API_BASE_URL}${popup.imagePath}`}
             alt={popup.title}
           />
         </div>

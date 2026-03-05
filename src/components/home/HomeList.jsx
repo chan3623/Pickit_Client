@@ -25,35 +25,6 @@ export default function HomeList({ data }) {
     navigate(`/detail/${popupId}`);
   };
 
-  // useEffect(() => {
-  //   const selectPopups = async () => {
-  //     const response = await getPopups();
-  //     if (response.status === 200 && response.statusText === "OK") {
-  //       const { data } = response;
-
-  //       const selectPopupList = data.map((item) => {
-  //         const startDate = new Date(item.startDate);
-  //         const endDate = new Date(item.endDate);
-
-  //         const kstStartDate = new Date(
-  //           startDate.getTime() + 9 * 60 * 60 * 1000,
-  //         );
-  //         const kstEndDate = new Date(endDate.getTime() + 9 * 60 * 60 * 1000);
-  //         return {
-  //           ...item,
-  //           startDate: kstStartDate.toISOString().split("T")[0],
-  //           endDate: kstEndDate.toISOString().split("T")[0],
-  //           src: `http://localhost:3000${item.imagePath}`,
-  //         };
-  //       });
-
-  //       setPopupList(selectPopupList);
-  //     }
-  //   };
-
-  //   selectPopups();
-  // }, []);
-
   return (
     <div className={style.listBox}>
       <div className={style.titleInnerBox}>
