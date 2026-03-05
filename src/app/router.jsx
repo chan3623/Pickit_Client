@@ -12,64 +12,59 @@ import ReservationPage from "@/pages/reservation/ReservationPage";
 import ReservationManagePage from "@/pages/reservationManage/ReservationManagePage";
 import { createHashRouter, Navigate } from "react-router-dom";
 
-export const router = createHashRouter(
-  [
-    {
-      path: "/",
-      element: <Navigate to="/home" replace />,
-    },
-    {
-      element: (
-        <UserAuthProvider>
-          <MainLayout />
-        </UserAuthProvider>
-      ),
-      children: [
-        {
-          path: "/home",
-          element: <HomePage />,
-        },
-        {
-          path: "/detail/:id",
-          element: <DetailPage />,
-        },
-        {
-          path: "/reservation",
-          element: <ReservationPage />,
-        },
-        {
-          path: "/myreservations",
-          element: <MyReservationPage />,
-        },
-      ],
-    },
-    {
-      element: (
-        <ManagerAuthProvider>
-          <ManagerLayout />
-        </ManagerAuthProvider>
-      ),
-      children: [
-        {
-          path: "/manager",
-          element: <ManagerPage />,
-        },
-        {
-          path: "/reservationManage",
-          element: <ReservationManagePage />,
-        },
-        {
-          path: "/new",
-          element: <NewPopupPage />,
-        },
-        {
-          path: "/edit",
-          element: <EditPopupPage />,
-        },
-      ],
-    },
-  ],
+export const router = createHashRouter([
   {
-    basename: "/Pickit_Client",
+    path: "/",
+    element: <Navigate to="/home" replace />,
   },
-);
+  {
+    element: (
+      <UserAuthProvider>
+        <MainLayout />
+      </UserAuthProvider>
+    ),
+    children: [
+      {
+        path: "/home",
+        element: <HomePage />,
+      },
+      {
+        path: "/detail/:id",
+        element: <DetailPage />,
+      },
+      {
+        path: "/reservation",
+        element: <ReservationPage />,
+      },
+      {
+        path: "/myreservations",
+        element: <MyReservationPage />,
+      },
+    ],
+  },
+  {
+    element: (
+      <ManagerAuthProvider>
+        <ManagerLayout />
+      </ManagerAuthProvider>
+    ),
+    children: [
+      {
+        path: "/manager",
+        element: <ManagerPage />,
+      },
+      {
+        path: "/reservationManage",
+        element: <ReservationManagePage />,
+      },
+      {
+        path: "/new",
+        element: <NewPopupPage />,
+      },
+      {
+        path: "/edit",
+        element: <EditPopupPage />,
+      },
+    ],
+  },
+]);
