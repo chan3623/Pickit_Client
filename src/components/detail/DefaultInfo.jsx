@@ -98,7 +98,7 @@ export default function DefaultInfo({ data }) {
               {infoData.map((item) => (
                 <li key={item.id} className={style.infoItem}>
                   <img
-                    src={`/icons/${item.id}.png`}
+                    src={`icons/${item.id}.png`}
                     alt={item.text}
                     className={style.icon}
                   />
