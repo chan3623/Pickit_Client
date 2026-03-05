@@ -10,9 +10,9 @@ import MyReservationPage from "@/pages/myreservation/MyReservationPage";
 import NewPopupPage from "@/pages/new/NewPopupPage";
 import ReservationPage from "@/pages/reservation/ReservationPage";
 import ReservationManagePage from "@/pages/reservationManage/ReservationManagePage";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createHashRouter, Navigate } from "react-router-dom";
 
-export const router = createBrowserRouter(
+export const router = createHashRouter(
   [
     {
       path: "/",
