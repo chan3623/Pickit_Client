@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename); // 현재 디렉토리 경로
 
 export default defineConfig({
   plugins: [react()],
+  base: "/Pickit_Client/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"), // @를 src 폴더로 매핑
