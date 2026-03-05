@@ -1,6 +1,7 @@
 {
   "name": "ticketing-client",
   "private": true,
+  "homepage": "https://github.com/chan3623/Pickit_Client",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
