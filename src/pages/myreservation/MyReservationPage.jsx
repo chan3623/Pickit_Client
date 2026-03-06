@@ -12,7 +12,7 @@ export default function MyReservationPage() {
     const fetchUserReservations = async () => {
       try {
         const response = await getUserReservations();
-        if (response.status === 200) {
+        if (response.success) {
           setReservations(response.data);
         } else {
           setError("예약 정보를 불러오는데 실패했습니다.");

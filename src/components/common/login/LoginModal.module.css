@@ -117,9 +117,8 @@
 
 .formGroup input:focus {
   outline: none;
-  border-color: #0f172a;
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 0 10px 4px rgba(78, 78, 78, 0.12);
 }
 
 /* ===== Login Button (Black Theme) ===== */

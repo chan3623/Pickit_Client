@@ -14,7 +14,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getPopupDetail(id);
-      if (response.status === 200) {
+      if (response.success) {
         setData(response.data);
         setLoading(false);
       }

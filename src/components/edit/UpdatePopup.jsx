@@ -179,7 +179,7 @@ export default function UpdatePopup({ popupData }) {
     try {
       const res = await updatePopup(formData);
 
-      if (res.status === 200) {
+      if (res.success) {
         showSuccess("팝업스토어가 수정되었습니다.");
       } else {
         showError("팝업스토어 수정에 실패했습니다.");

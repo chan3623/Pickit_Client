@@ -30,25 +30,28 @@ export default function LoginModal({ isOpen, onClose, onSignupClick }) {
         loginType: 2,
       });
 
-      const { accessToken, refreshToken } = res.data;
+      if (res.success) {
+        const { accessToken, refreshToken } = res.data;
 
-      // ✅ Provider와 동일한 키 사용
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-      localStorage.setItem("LOGIN_ROLE", "USER");
+        // ✅ Provider와 동일한 키 사용
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        localStorage.setItem("LOGIN_ROLE", "USER");
 
-      // 관리자 토큰 제거
-      // localStorage.removeItem("MANAGER_ACCESS_TOKEN");
-      // localStorage.removeItem("MANAGER_REFRESH_TOKEN");
+        // 관리자 토큰 제거
+        // localStorage.removeItem("MANAGER_ACCESS_TOKEN");
+        // localStorage.removeItem("MANAGER_REFRESH_TOKEN");
 
-      // ✅ 사용자 정보 세팅
-      const userRes = await getUser();
-      if (userRes && userRes.data) {
-        setAccount(userRes.data);
-        showSuccess("로그인 성공");
-      } else {
-        showError("로그인 도중 문제가 발생했습니다.");
+        // ✅ 사용자 정보 세팅
+        const userRes = await getUser();
+        if (userRes.success) {
+          setAccount(userRes.data);
+          showSuccess("로그인 성공");
+        } else {
+          showError("로그인 도중 문제가 발생했습니다.");
+        }
       }
+
       handleClose();
     } catch (e) {
       showError(e.customMessage || "로그인 실패");

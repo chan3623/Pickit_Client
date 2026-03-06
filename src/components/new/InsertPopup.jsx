@@ -116,7 +116,70 @@ export default function InsertPopup() {
     });
   };
 
+  const checkNewPopupData = () => {
+    if (!data.title.trim()) {
+      return {
+        success: false,
+        message: "제목을 입력해주세요.",
+      };
+    }
+
+    if (!data.startDate) {
+      return {
+        success: false,
+        message: "시작일을 설정해주세요.",
+      };
+    }
+
+    if (!data.endDate) {
+      return {
+        success: false,
+        message: "종료일을 설정해주세요.",
+      };
+    }
+
+    if (!data.address) {
+      return {
+        success: false,
+        message: "주소를 입력해주세요.",
+      };
+    }
+
+    if (!data.tel) {
+      return {
+        success: false,
+        message: "전화번호 입력해주세요.",
+      };
+    }
+
+    if (!data.image) {
+      return {
+        success: false,
+        message: "사진을 선택해주세요.",
+      };
+    }
+
+    const openDays = days.filter((item) => item.isOpen);
+
+    if (openDays.length === 0) {
+      return {
+        success: false,
+        message: "운영할 요일 및 시간을 입력해주세요.",
+      };
+    }
+
+    return {
+      success: true,
+    };
+  };
+
   const createPopup = async () => {
+    const is_checked = checkNewPopupData();
+    if (!is_checked.success) {
+      showError(is_checked.message);
+      return false;
+    }
+
     const formData = new FormData();
 
     formData.append("title", data.title);
@@ -147,7 +210,7 @@ export default function InsertPopup() {
     try {
       const res = await postNewPopup(formData);
 
-      if (res.status === 201) {
+      if (res.success) {
         showSuccess("팝업스토어가 등록되었습니다.");
       } else {
         showError("팝업스토어 등록에 실패했습니다.");

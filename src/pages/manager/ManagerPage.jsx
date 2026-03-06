@@ -24,7 +24,7 @@ export default function PopupAdminPage() {
 
       const res = await getManagerPopups();
 
-      if (res.status === 200) {
+      if (res.success) {
         setPopups(res.data);
       } else {
         setPopups([]);

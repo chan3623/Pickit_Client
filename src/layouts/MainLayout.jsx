@@ -56,7 +56,7 @@ export default function MainLayout() {
 
     const fetchNotifications = async () => {
       const response = await getNotifications();
-      if (response.status === 200) {
+      if (response.success) {
         setNotifications(response.data);
       }
     };
@@ -66,8 +66,7 @@ export default function MainLayout() {
 
   const readNotification = async (notificationId) => {
     const response = await markNotificationAsRead(notificationId);
-    console.log("response  : ", response);
-    if (response.status === 200) {
+    if (response.success) {
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)),
       );

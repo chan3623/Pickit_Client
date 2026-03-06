@@ -21,7 +21,7 @@ export default function SignupModal({ isOpen, onClose }) {
     try {
       const response = await registerAdmin(signupData);
 
-      if (response.status === 201) {
+      if (response.success) {
         showSuccess("정상적으로 회원가입 되었습니다.");
         handleClose();
       }

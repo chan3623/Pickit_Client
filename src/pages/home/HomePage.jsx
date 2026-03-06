@@ -13,7 +13,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPopupSlideData = async () => {
       const response = await getRandomPopups();
-      if (response.status === 200) {
+      if (response.success) {
         setSlideData(response.data ?? []);
       }
       setSlideLoaded(true);
@@ -21,7 +21,7 @@ export default function HomePage() {
 
     const fetchPopupListData = async () => {
       const response = await getPopups();
-      if (response.status === 200) {
+      if (response.success) {
         setListData(response.data ?? []);
       }
       setListLoaded(true);

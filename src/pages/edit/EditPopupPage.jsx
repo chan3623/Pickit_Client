@@ -18,7 +18,7 @@ export default function PopupCreatePage() {
     const fetchPopupDetail = async () => {
       const response = await getPopupDetail(popupId);
 
-      if (response.status === 200) {
+      if (response.success) {
         setData(response.data);
       }
     };

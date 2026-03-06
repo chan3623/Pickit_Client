@@ -42,7 +42,7 @@ export default function ManagerList({ popups, onStatusChange }) {
     try {
       const response = await earlyClosePopup(updateData);
 
-      if (response.status === 200) {
+      if (response.success) {
         onStatusChange(popupId, "EARLY_CLOSED");
         showSuccess("팝업스토어가 조기 종료되었습니다.");
       }
@@ -76,7 +76,7 @@ export default function ManagerList({ popups, onStatusChange }) {
 
     try {
       const response = await cancelPopup(updateData);
-      if (response.status === 200) {
+      if (response.success) {
         onStatusChange(popupId, "CANCELED");
         showSuccess("팝업스토어 운영이 취소되었습니다.");
       }

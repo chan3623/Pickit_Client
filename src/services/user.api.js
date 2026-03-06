@@ -10,5 +10,5 @@ export async function registerAdmin({ email, password }) {
 
 export async function getUser() {
   const res = await api.get(`/user/me`);
-  return res;
+  return res.data;
 }

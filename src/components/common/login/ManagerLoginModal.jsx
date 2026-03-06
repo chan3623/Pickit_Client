@@ -31,20 +31,21 @@ export default function ManagerLoginModal({ isOpen, onClose, onSignupClick }) {
         loginType: 1, // manager
       });
 
-      const { accessToken, refreshToken } = res.data;
+      if (res.success) {
+        const { accessToken, refreshToken } = res.data;
 
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-      localStorage.setItem("LOGIN_ROLE", "MANAGER");
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        localStorage.setItem("LOGIN_ROLE", "MANAGER");
 
-      // 유저 토큰 제거
-      // localStorage.removeItem("USER_ACCESS_TOKEN");
-      // localStorage.removeItem("USER_REFRESH_TOKEN");
+        showSuccess("로그인 성공");
 
-      showSuccess("로그인 성공");
+        const userRes = await getUser();
 
-      const userRes = await getUser();
-      setAccount(userRes.data);
+        if (userRes.success) {
+          setAccount(userRes.data);
+        }
+      }
     } catch (e) {
       showError(e.customMessage || "로그인 실패");
       console.error("매니저 로그인 실패:", e);

@@ -21,7 +21,7 @@ export default function ReservationPage() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getPopupReservation(popupId);
-      if (response.status === 200) {
+      if (response.success) {
         setDate(response.data);
         setLoading(false);
       }
@@ -33,7 +33,7 @@ export default function ReservationPage() {
     try {
       const response = await postPopupReservation(reservationPayload);
 
-      if (response.data && response.status === 201) {
+      if (response.success) {
         showSuccess("예약되었습니다.");
         navigate("/home");
       }
@@ -41,24 +41,6 @@ export default function ReservationPage() {
       showError(e.customMessage);
     }
   };
-
-  // const handleSubmitReservation = async (reservationPayload) => {
-  //   try {
-  //     const [res1, res2] = await Promise.all([
-  //       postPopupReservation(reservationPayload),
-  //       postPopupReservation(reservationPayload),
-  //     ]);
-
-  //     console.log("res1:", res1);
-  //     console.log("res2:", res2);
-
-  //     showSuccess("예약되었습니다.");
-  //     navigate("/home");
-  //   } catch (e) {
-  //     console.error("동시 요청 중 하나 실패", e);
-  //     showError(e.customMessage);
-  //   }
-  // };
 
   if (loading) return <div>로딩중...</div>;
 
