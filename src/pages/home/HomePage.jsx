@@ -13,6 +13,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPopupSlideData = async () => {
       const response = await getRandomPopups();
+      console.log("homePage response : ", response);
       if (response.success) {
         setSlideData(response.data ?? []);
       }
