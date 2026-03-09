@@ -1,11 +1,13 @@
 import api from "../lib/axios";
 
 export async function registerUser({ email, password }) {
-  return api.post("/user", { email, password });
+  const res = await api.post("/user", { email, password });
+  return res.data;
 }
 
 export async function registerAdmin({ email, password }) {
-  return api.post("/user/admin", { email, password });
+  const res = await api.post("/user/admin", { email, password });
+  return res.data;
 }
 
 export async function getUser() {

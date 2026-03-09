@@ -23,11 +23,12 @@ export default function SignupModal({ isOpen, onClose }) {
 
       if (response.success) {
         showSuccess("정상적으로 회원가입 되었습니다.");
-        handleClose();
       }
     } catch (error) {
       showError(error.customMessage);
     }
+
+    handleClose();
   };
 
   return (

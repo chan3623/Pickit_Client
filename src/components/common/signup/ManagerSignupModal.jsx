@@ -20,14 +20,13 @@ export default function SignupModal({ isOpen, onClose }) {
 
     try {
       const response = await registerAdmin(signupData);
-
       if (response.success) {
         showSuccess("정상적으로 회원가입 되었습니다.");
-        handleClose();
       }
     } catch (error) {
       showError(error.customMessage);
     }
+    handleClose();
   };
 
   return (
@@ -37,7 +36,7 @@ export default function SignupModal({ isOpen, onClose }) {
           ×
         </button>
 
-        <h2 className={styles.title}>회원가입</h2>
+        <h2 className={styles.title}>관리자 회원가입</h2>
 
         <div className={styles.formGroup}>
           <label htmlFor="signup-email">이메일</label>

@@ -48,7 +48,8 @@ export default function ManagerAuthProvider({ children }) {
       try {
         const res = await getUser();
         setAccount(res.data);
-      } catch {
+      } catch (e) {
+        console.log("e: ", e);
         handleLogout();
       } finally {
         setLoading(false);
