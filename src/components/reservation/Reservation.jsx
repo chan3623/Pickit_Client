@@ -55,6 +55,7 @@ const isWithinPopupPeriod = (dateStr, popup) => {
 
 const getDayOfWeek = (dateStr) => {
   const jsDay = new Date(dateStr).getDay();
+
   return jsDay === 0 ? 7 : jsDay;
 };
 
@@ -162,10 +163,8 @@ export default function Reservation({ data, onSubmitReservation }) {
     );
   }
 
-  let dayOfWeek;
-
   const isDateAvailable = (date) => {
-    dayOfWeek = getDayOfWeek(date);
+    const dayOfWeek = getDayOfWeek(date);
 
     // ✅ 과거 날짜 체크 추가
     if (date < currentKSTDate) return false;
@@ -200,6 +199,8 @@ export default function Reservation({ data, onSubmitReservation }) {
 
   const handleSubmit = () => {
     if (!isFormValid) return;
+
+    const dayOfWeek = getDayOfWeek(selectedDate);
 
     onSubmitReservation({
       popupId: popup.id,

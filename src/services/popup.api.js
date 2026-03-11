@@ -2,8 +2,23 @@ import api from "../lib/axios";
 
 // home
 
-export async function getPopups() {
-  const res = await api.get("/popup");
+// home
+
+export async function getPopups({
+  cursor = null,
+  limit = 12,
+  status = "ALL",
+  keyword = "",
+} = {}) {
+  const params = {};
+
+  if (cursor) params.cursor = cursor;
+  if (limit) params.limit = limit;
+  if (status && status !== "ALL") params.status = status;
+  if (keyword) params.keyword = keyword;
+
+  const res = await api.get("/popup", { params });
+
   return res.data;
 }
 
@@ -45,13 +60,30 @@ export async function getManagerPopups() {
 }
 
 export async function getReservationManage(popupId, filters = {}) {
+  const {
+    page = 1,
+    limit = 10,
+    date = "",
+    status = "",
+    email = "",
+    phone = "",
+  } = filters;
+
+  const params = {
+    page: Number(page),
+    limit: Number(limit),
+    date,
+    status,
+    email,
+    phone,
+  };
+
   const res = await api.get(`/popup/reservationManage/${popupId}`, {
-    params: filters,
+    params,
   });
 
   return res.data;
 }
-
 // popup create
 
 export async function postNewPopup(formData) {
@@ -84,6 +116,12 @@ export async function cancelPopup(data) {
 
 export async function cancelUserReservation(data) {
   const res = await api.patch("/popup/cancel-user", data);
+
+  return res.data;
+}
+
+export async function updateReservationStatus(data) {
+  const res = await api.patch("/popup/reservation-status", data);
 
   return res.data;
 }

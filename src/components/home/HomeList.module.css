@@ -10,7 +10,7 @@
 
 .titleInnerBox {
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: center;
 }
@@ -20,12 +20,50 @@
     font-weight: 700;
 }
 
+.filterBox {
+    width: 1115px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.statusTabs {
+    display: flex;
+    gap: 10px;
+}
+
+.tab {
+    border: 1px solid #ddd;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.activeTab {
+    border: 1px solid #ff4d4d;
+    background: #ff4d4d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search {
+    width: 260px;
+    height: 38px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 0 12px;
+}
+
 .listInnerBox {
     width: 1115px;
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    /* 🌟 왼쪽 정렬 유지 */
     justify-content: flex-start;
     gap: 40px 25px;
     padding: 0;
@@ -86,10 +124,7 @@
 .title {
     font-size: 19px;
     font-family: "Roboto", sans-serif;
-    font-optical-sizing: auto;
     font-weight: 700;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
     line-height: 1.3;
     margin: 8px 0;
     display: -webkit-box;
@@ -97,9 +132,3 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
-
-/* .desc {
-    font-size: 15px;
-    color: #888;
-    line-height: 1.4;
-} */

@@ -62,9 +62,10 @@ export default function ReservationFilterBar({
         onChange={(e) => handleChange("status", e.target.value)}
       >
         <option value="">전체</option>
-        <option value="COMPLETED">방문</option>
         <option value="RESERVED">예약</option>
-        <option value="CANCELED_BY_USER">취소</option>
+        <option value="CANCELED_BY_USER">예약 취소</option>
+        <option value="COMPLETED">방문</option>
+        <option value="NO_SHOW">미방문</option>
       </select>
 
       {/* 검색 타입 */}

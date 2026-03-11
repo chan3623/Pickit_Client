@@ -1,12 +1,14 @@
 import styles from "./ReservationManage.module.css";
 
-export default function ReservationTable({ data }) {
+export default function ReservationTable({ data, reservationStatusChange }) {
   const changeStatus = (status) => {
     switch (status) {
       case "RESERVED":
         return "예약 완료";
       case "COMPLETED":
         return "방문 완료";
+      case "NO_SHOW":
+        return "미방문";
       case "CANCELED_BY_USER":
         return "예약 취소";
       default:
@@ -30,6 +32,12 @@ export default function ReservationTable({ data }) {
     return phone;
   };
 
+  const handleStatusButton = async (reservationInfoId, status) => {
+    if (!reservationStatusChange) return;
+    const data = { id: reservationInfoId, status };
+    await reservationStatusChange(data);
+  };
+
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
@@ -41,12 +49,14 @@ export default function ReservationTable({ data }) {
             <th>시간</th>
             <th className={styles.centerColumn}>인원</th>
             <th className={styles.centerColumn}>상태</th>
+            <th className={styles.centerColumn}>처리</th>
           </tr>
         </thead>
+
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan="6" className={styles.empty}>
+              <td colSpan="7" className={styles.empty}>
                 해당 날짜의 예약이 없습니다.
               </td>
             </tr>
@@ -58,7 +68,9 @@ export default function ReservationTable({ data }) {
                   <td>{formatPhoneNumber(info.reserverPhone)}</td>
                   <td>{item.date}</td>
                   <td>{item.time}</td>
+
                   <td className={styles.centerColumn}>{info.quantity}</td>
+
                   <td className={styles.centerColumn}>
                     <span
                       className={`${styles.status} ${
@@ -67,6 +79,30 @@ export default function ReservationTable({ data }) {
                     >
                       {changeStatus(info.status)}
                     </span>
+                  </td>
+
+                  <td className={styles.centerColumn}>
+                    {info.status === "RESERVED" ? (
+                      <div className={styles.actionButtons}>
+                        <button
+                          className={styles.visitButton}
+                          onClick={() =>
+                            handleStatusButton(info.id, "COMPLETED")
+                          }
+                        >
+                          방문 처리
+                        </button>
+
+                        <button
+                          className={styles.noShowButton}
+                          onClick={() => handleStatusButton(info.id, "NO_SHOW")}
+                        >
+                          미방문 처리
+                        </button>
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                   </td>
                 </tr>
               )),

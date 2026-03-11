@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 import ReservationFilterBar from "./ReservationFilterBar";
 import styles from "./ReservationManage.module.css";
 import ReservationSummaryCard from "./ReservationSummaryCard";
 import ReservationTable from "./ReservationTable";
 
-export default function ReservationManage({ data, dateChange }) {
+export default function ReservationManage({
+  data,
+  dateChange,
+  reservationStatusChange,
+  page,
+  changePage,
+}) {
   const {
     totalReservationCount,
     afterReservationCount,
+    noShowCount,
     userCancelCount,
     visitCount,
     selectedReservationCount,
     selectedAfterReservationCount,
+    selectedNoShowCount,
     selectedCancelCount,
     selectedVisitCount,
     popupReservations,
@@ -46,33 +55,33 @@ export default function ReservationManage({ data, dateChange }) {
       <h1 className={styles.title}>예약 관리</h1>
 
       <div className={styles.summaryWrapper}>
+        <ReservationSummaryCard title="총 예약" value={totalReservationCount} />
         <ReservationSummaryCard
-          title="전체 예약 건수"
-          value={totalReservationCount}
-        />
-        <ReservationSummaryCard
-          title="전체 남은 예약 건수"
+          title="예약 대기"
           value={afterReservationCount}
         />
+        <ReservationSummaryCard title="예약 취소" value={userCancelCount} />
+        <ReservationSummaryCard title="미방문" value={noShowCount} />
+        <ReservationSummaryCard title="방문 완료" value={visitCount} />
+
         <ReservationSummaryCard
-          title="전체 예약 취소 건수"
-          value={userCancelCount}
-        />
-        <ReservationSummaryCard title="전체 방문 건수" value={visitCount} />
-        <ReservationSummaryCard
-          title="선택한 날짜의 예약 건수"
+          title="선택일 예약"
           value={selectedReservationCount}
         />
         <ReservationSummaryCard
-          title="선택한 날짜의 남은 예약 건수"
+          title="선택일 예약 예정"
           value={selectedAfterReservationCount}
         />
         <ReservationSummaryCard
-          title="선택한 날짜의 예약 취소 건수"
+          title="선택일 취소"
           value={selectedCancelCount}
         />
         <ReservationSummaryCard
-          title="선택한 날짜의 방문 건수"
+          title="선택일 미방문"
+          value={selectedNoShowCount}
+        />
+        <ReservationSummaryCard
+          title="선택일 방문"
           value={selectedVisitCount}
         />
       </div>
@@ -84,7 +93,16 @@ export default function ReservationManage({ data, dateChange }) {
         setFilters={handleFilters}
       />
 
-      <ReservationTable data={popupReservations} />
+      <ReservationTable
+        data={popupReservations}
+        reservationStatusChange={reservationStatusChange}
+      />
+
+      <Pagination
+        page={page}
+        totalPages={data.totalPages}
+        changePage={changePage}
+      />
     </div>
   );
 }

@@ -117,8 +117,11 @@ function addRefreshSubscriber(callback) {
 
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
+  const url = config.url || "";
 
-  if (token) {
+  const isLoginRequest = url.includes("/auth/login");
+
+  if (token && !isLoginRequest) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 

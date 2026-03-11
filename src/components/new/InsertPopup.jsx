@@ -174,6 +174,8 @@ export default function InsertPopup() {
   };
 
   const createPopup = async () => {
+    console.log("data : ", data);
+    console.log("days : ", days);
     const is_checked = checkNewPopupData();
     if (!is_checked.success) {
       showError(is_checked.message);
