@@ -21,6 +21,8 @@ const getStatusLabel = (status) => {
   switch (status) {
     case "RESERVED":
       return { text: "예약 완료", color: "#00796b", bg: "#e0f7fa" };
+    case "NO_SHOW":
+      return { text: "NO_SHOW", color: "#e8590c", bg: "#ffe9cc" };
     case "COMPLETED":
       return { text: "방문 완료", color: "#424242", bg: "#eeeeee" };
     case "CANCELED_BY_USER":
@@ -39,7 +41,7 @@ export default function MyReservationList({ reservations }) {
     return <p className={styles.noReservations}>예약 내역이 없습니다.</p>;
   }
 
-  const handleCancel = async (e, reservationId) => {
+  const handleCancel = async (e, reservationId, popupId) => {
     e.stopPropagation();
 
     const isConfirm = await showWarning("정말 예약을 취소하시겠습니까?");
@@ -47,6 +49,7 @@ export default function MyReservationList({ reservations }) {
 
     const updateData = {
       id: reservationId,
+      popupId,
       status: "CANCELED_BY_USER",
     };
 
@@ -111,7 +114,9 @@ export default function MyReservationList({ reservations }) {
         {reservation.status === "RESERVED" && (
           <button
             className={styles.cancelButton}
-            onClick={(e) => handleCancel(e, reservation.id)}
+            onClick={(e) =>
+              handleCancel(e, reservation.id, reservation.popupId)
+            }
           >
             예약 취소
           </button>

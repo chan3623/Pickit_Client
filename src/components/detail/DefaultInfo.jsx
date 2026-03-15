@@ -1,5 +1,6 @@
 import { ENV } from "@/config/env.js";
 import style from "./DefaultInfo.module.css";
+
 const DAY_MAP = {
   1: "월",
   2: "화",
@@ -59,40 +60,46 @@ export default function DefaultInfo({ data }) {
         </div>
 
         <div className={style.infoInnerBox}>
-          <ul className={style.textInnerBox}>
-            <li className={style.listBox}>
-              <h1>{popup.title}</h1>
-            </li>
+          <div className={style.infoTop}>
+            <h1 className={style.title}>{popup.title}</h1>
 
-            <li className={style.listBox}>
-              <div className={style.rangeBox}>
-                {formatDate(popup.startDate)} - {formatDate(popup.endDate)}
+            <div className={style.infoTable}>
+              <div className={style.row}>
+                <div className={style.label}>기간</div>
+                <div className={style.value}>
+                  {formatDate(popup.startDate)} - {formatDate(popup.endDate)}
+                </div>
               </div>
-            </li>
 
-            <li className={style.listBox}>
-              <div>{popup.address}</div>
-            </li>
+              <div className={style.row}>
+                <div className={style.label}>주소</div>
+                <div className={style.value}>{popup.address}</div>
+              </div>
 
-            <li className={style.listBox}>
-              <ul>
-                {operatingTimeList.map((item) => (
-                  <li key={item.id}>
-                    {item.day}요일 : {item.open} - {item.close}
-                    <span>
-                      {" "}
-                      ( {item.slotMinute}분 / 최대 {item.capacity}명 )
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          </ul>
+              <div className={style.row}>
+                <div className={style.label}>운영시간</div>
+
+                <div className={style.dayGridBox}>
+                  <div className={style.dayGrid}>
+                    {operatingTimeList.map((item) => (
+                      <div key={item.id} className={style.dayItem}>
+                        <span className={style.day}>{item.day}</span>
+                        <span className={style.time}>
+                          {item.open} - {item.close}
+                        </span>
+                        <span className={style.meta}>
+                          {item.slotMinute}분 / {item.capacity}명
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className={style.carAndPriceInnerBox}>
-            <div className={style.carAndPriceBox}>
-              <p>주차 및 입장 정보</p>
-            </div>
+            <p className={style.sectionTitle}>주차 및 입장 정보</p>
 
             <ul className={style.infoListBox}>
               {infoData.map((item) => (

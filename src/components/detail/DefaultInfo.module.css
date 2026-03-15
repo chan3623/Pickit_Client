@@ -1,10 +1,5 @@
 .defaultInfoBox {
     width: 1115px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-
     margin-top: 150px;
     margin-bottom: 80px;
 }
@@ -12,115 +7,118 @@
 .imageInfoInnerBox {
     width: 100%;
     height: 520px;
-
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
 }
 
 .imageBox {
     width: 390px;
     height: 520px;
-
-    /* background-color: #fff; */
-
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-bottom: 30px; */
 }
 
 .image {
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
 .infoInnerBox {
+    width: 660px;
     height: 520px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.textInnerBox {
-    width: 600px;
-    /* margin-top: 30px; */
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-
-}
-
-.listBox {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
-
-    margin-bottom: 30px;
 }
 
-.listBox>h1 {
-    font-family: "Roboto", sans-serif;
-    font-optical-sizing: auto;
+.infoTop {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.title {
+    font-size: 32px;
     font-weight: 700;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
 }
 
-.rangeBox {
-    font-size: 20px;
+.infoTable {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.row {
+    display: flex;
+    gap: 30px;
+}
+
+.label {
+    width: 70px;
+    font-weight: 700;
+}
+
+.value {
+    color: #555;
+}
+
+.dayGridBox {
+    height: 200px;
+}
+
+.dayGrid {
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+    gap: 6px 18px;
+}
+
+.dayItem {
+    display: flex;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.day {
+    font-weight: 700;
+}
+
+.time {
+    color: #333;
+}
+
+.meta {
+    font-size: 12px;
+    color: #888;
 }
 
 .carAndPriceInnerBox {
     width: 100%;
 }
 
-.carAndPriceBox {
-    width: 100%;
-}
-
-.carAndPriceBox>p {
-    width: 100%;
-    color: #000;
-    padding: 10px 0;
+.sectionTitle {
     font-weight: 700;
     border-bottom: 3px solid #000;
+    padding-bottom: 8px;
 }
 
 .infoListBox {
-    width: 100%;
     display: flex;
-    /* 가로 나열 */
-    gap: 20px 60px;
-    /* 아이콘 사이 간격 */
-    padding: 20px 20px 20px 20px;
-    list-style: none;
-    border-bottom: 1px solid #000;
+    gap: 60px;
+    padding: 20px 0;
 }
 
 .infoItem {
     display: flex;
     flex-direction: column;
-    /* 아이콘 아래에 텍스트 배치 (옆으로 하려면 row) */
     align-items: center;
     gap: 8px;
 }
 
-/* 아이콘 크기 고정 */
 .icon {
     width: 36px;
     height: 36px;
-    object-fit: contain;
-    /* 이미지 비율 유지 */
 }
 
 .infoItem span {
     font-size: 14px;
-    color: #333;
 }
